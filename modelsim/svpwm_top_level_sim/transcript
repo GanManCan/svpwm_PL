@@ -1,0 +1,155 @@
+# Compile of firing_time_generator.vhd failed with 1 errors.
+compile firing_time_generator.vhd
+# wrong # args: should be "compile w cmd ?arg ...?"
+compile
+# wrong # args: should be "compile w cmd ?arg ...?"
+compile firing_time_generator.vhd
+# wrong # args: should be "compile w cmd ?arg ...?"
+# Compile of firing_time_generator.vhd failed with 1 errors.
+# Compile of svpwm.vhd was successful.
+# Compile of svpwm_top_level.vhd was successful.
+# Compile of svpwm_top_level_tb.vhd was successful.
+# Compile of firing_time_generator_tb.vhd was successful.
+# 5 compiles, 1 failed with 1 error.
+# Compile of firing_time_generator.vhd failed with 14 errors.
+compileoutofdate
+# invalid command name "compileoutofdate"
+project compileoutofdate
+# Compile of firing_time_generator.vhd failed with 14 errors.
+project compileoutofdate
+# Compile of firing_time_generator.vhd failed with 11 errors.
+project compileoutofdate
+# Compile of firing_time_generator.vhd failed with 11 errors.
+project compileoutofdate
+# Compile of firing_time_generator.vhd failed with 10 errors.
+# Compile of firing_time_generator.vhd failed with 9 errors.
+# Compile of firing_time_generator.vhd failed with 8 errors.
+project compileoutofdate
+# Compile of firing_time_generator.vhd was successful.
+# Compile of firing_time_generator.vhd was successful.
+# Compile of firing_time_generator_tb.vhd failed with 1 errors.
+# 2 compiles, 1 failed with 1 error.
+# Compile of firing_time_generator_tb.vhd failed with 4 errors.
+# Compile of firing_time_generator_tb.vhd failed with 2 errors.
+# Compile of firing_time_generator.vhd was successful.
+# Compile of svpwm.vhd was successful.
+# Compile of svpwm_top_level.vhd was successful.
+# Compile of svpwm_top_level_tb.vhd was successful.
+# Compile of firing_time_generator_tb.vhd was successful.
+# 5 compiles, 0 failed with no errors.
+vsim -gui work.firing_time_generator_tb
+# vsim -gui work.firing_time_generator_tb 
+# Start time: 23:06:23 on Dec 05,2021
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading ieee.fixed_float_types
+# Loading ieee.math_real(body)
+# Loading ieee.fixed_generic_pkg(body)
+# Loading ieee.fixed_pkg
+# Loading work.firing_time_generator_tb(bench)
+# Loading work.firing_time_generator(behavioral)
+# Load canceled
+run
+# ** Warning: :ieee:fixed_generic_pkg:"<": metavalue detected, returning FALSE
+#    Time: 35 ns  Iteration: 0  Instance: /firing_time_generator_tb/uut
+# ** Warning: :ieee:fixed_generic_pkg:">=": metavalue detected, returning FALSE
+#    Time: 35 ns  Iteration: 0  Instance: /firing_time_generator_tb/uut
+# ** Warning: :ieee:fixed_generic_pkg:"<=": metavalue detected, returning FALSE
+#    Time: 35 ns  Iteration: 0  Instance: /firing_time_generator_tb/uut
+run
+run
+run
+run
+run
+run
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+add wave -position end  sim:/firing_time_generator_tb/clk
+add wave -position end  sim:/firing_time_generator_tb/reset_n
+add wave -position end  sim:/firing_time_generator_tb/fire_time_start
+add wave -position end  sim:/firing_time_generator_tb/fire_time_done
+add wave -position end  sim:/firing_time_generator_tb/fp_v_alpha
+add wave -position end  sim:/firing_time_generator_tb/fp_v_beta
+add wave -position end  sim:/firing_time_generator_tb/fire_u
+add wave -position end  sim:/firing_time_generator_tb/fire_v
+add wave -position end  sim:/firing_time_generator_tb/fire_w
+add wave -position end  sim:/firing_time_generator_tb/stop_the_clock
+add wave -position end  sim:/firing_time_generator_tb/clock_period
+run
+# ** Warning: :ieee:fixed_generic_pkg:"<": metavalue detected, returning FALSE
+#    Time: 35 ns  Iteration: 0  Instance: /firing_time_generator_tb/uut
+# ** Warning: :ieee:fixed_generic_pkg:">=": metavalue detected, returning FALSE
+#    Time: 35 ns  Iteration: 0  Instance: /firing_time_generator_tb/uut
+# ** Warning: :ieee:fixed_generic_pkg:"<=": metavalue detected, returning FALSE
+#    Time: 35 ns  Iteration: 0  Instance: /firing_time_generator_tb/uut
+add wave -position end  sim:/firing_time_generator_tb/uut/state
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+run
+# ** Warning: :ieee:fixed_generic_pkg:"<": metavalue detected, returning FALSE
+#    Time: 35 ns  Iteration: 0  Instance: /firing_time_generator_tb/uut
+# ** Warning: :ieee:fixed_generic_pkg:">=": metavalue detected, returning FALSE
+#    Time: 35 ns  Iteration: 0  Instance: /firing_time_generator_tb/uut
+# ** Warning: :ieee:fixed_generic_pkg:"<=": metavalue detected, returning FALSE
+#    Time: 35 ns  Iteration: 0  Instance: /firing_time_generator_tb/uut
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position end  sim:/firing_time_generator_tb/uut/int_mult_count
+add wave -position end  sim:/firing_time_generator_tb/uut/int_mult_delay
+# Compile of firing_time_generator.vhd failed with 1 errors.
+# Compile of svpwm.vhd was successful.
+# Compile of svpwm_top_level.vhd was successful.
+# Compile of svpwm_top_level_tb.vhd was successful.
+# Compile of firing_time_generator_tb.vhd was successful.
+# 5 compiles, 1 failed with 1 error.
+# Compile of firing_time_generator.vhd was successful.
+vsim -gui work.firing_time_generator_tb
+# End time: 23:11:16 on Dec 05,2021, Elapsed time: 0:04:53
+# Errors: 0, Warnings: 6
+# vsim -gui work.firing_time_generator_tb 
+# Start time: 23:11:16 on Dec 05,2021
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading ieee.fixed_float_types
+# Loading ieee.math_real(body)
+# Loading ieee.fixed_generic_pkg(body)
+# Loading ieee.fixed_pkg
+# Loading work.firing_time_generator_tb(bench)
+# Loading work.firing_time_generator(behavioral)
+# WARNING: No extended dataflow license exists
+add wave -position end  sim:/firing_time_generator_tb/clk
+add wave -position end  sim:/firing_time_generator_tb/reset_n
+add wave -position end  sim:/firing_time_generator_tb/fire_time_start
+add wave -position end  sim:/firing_time_generator_tb/fire_time_done
+add wave -position end  sim:/firing_time_generator_tb/fp_v_alpha
+add wave -position end  sim:/firing_time_generator_tb/fp_v_beta
+add wave -position end  sim:/firing_time_generator_tb/fire_u
+add wave -position end  sim:/firing_time_generator_tb/fire_v
+add wave -position end  sim:/firing_time_generator_tb/fire_w
+add wave -position end  sim:/firing_time_generator_tb/stop_the_clock
+add wave -position end  sim:/firing_time_generator_tb/clock_period
+add wave -position end  sim:/firing_time_generator_tb/uut/state
+add wave -position end  sim:/firing_time_generator_tb/uut/int_mult_counter
+add wave -position end  sim:/firing_time_generator_tb/uut/int_mult_delay
+run
+# ** Warning: :ieee:fixed_generic_pkg:"<": metavalue detected, returning FALSE
+#    Time: 35 ns  Iteration: 0  Instance: /firing_time_generator_tb/uut
+# ** Warning: :ieee:fixed_generic_pkg:">=": metavalue detected, returning FALSE
+#    Time: 35 ns  Iteration: 0  Instance: /firing_time_generator_tb/uut
+# ** Warning: :ieee:fixed_generic_pkg:"<=": metavalue detected, returning FALSE
+#    Time: 35 ns  Iteration: 0  Instance: /firing_time_generator_tb/uut
+run
+run

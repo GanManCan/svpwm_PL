@@ -35,7 +35,6 @@ entity firing_time_generator is
   PORT (
     clk    			: IN std_logic;
 	reset_n			: IN std_logic;
-	ena 			: IN std_logic; 
 	fire_time_start	: IN std_logic; 
 	fp_v_alpha 	: IN sfixed(20 downto -11); 
 	fp_v_beta   : IN sfixed(20 downto -11);
@@ -52,7 +51,7 @@ architecture Behavioral of firing_time_generator is
 	-- fp == fixed point
 	  
 	-- Create State Machine type
-	ype STATE_TYPE is (IDLE,MULTIPLY, DONE);
+	type STATE_TYPE is (IDLE,MULTIPLY, DONE);
 	signal state : STATE_TYPE; 
 	  
 	-- CONSTANT DECCLARATIONS 
@@ -62,9 +61,11 @@ architecture Behavioral of firing_time_generator is
 	CONSTANT fp_0v5  		: sfixed(1 downto -1)   := to_sfixed(0.5, 1, -1); -- 0.5
 	CONSTANT fp_sqrt3_vdc : sfixed(2 downto -20) := to_sfixed(1.732/real(v_dc), 2, -20); -- sqrt(3)/v_dc
 	CONSTANT fp_sqrt3_2  	: sfixed(20 downto -11) := to_sfixed(1.732/2.0, 20, -11); -- sqrt(3)/2  
+	
+	CONSTANT int_mult_delay : integer range 0 to 7 := 2; 
 	 
 	-- SIGNAL declaratrions 
-	signal fire_time_start : std_logic_vector := '0'; 	
+	signal int_mult_counter	: integer range 0 to 255 := 0; 
 	
 	-- Fixed Point Signals for Firinig Calculations 
 	signal fp_fire_u_temp   : sfixed(20 downto -11); 
@@ -106,12 +107,13 @@ begin
 				
 				fire_time_done <= '0'; 
 				
-				if(fire_time_start = 0) then
+				if(fire_time_start = '1') then
+					state <= MULTIPLY; 
 			  
 				end if; --if(firing_time_start = 0); 
 			
 			when MULTIPLY =>
-								  
+			  								  
 				-- 3:1 Mux to select the output depending on sector of signal
 				-- Calc value need for if/then statments	  
 				fp_sqrt3_v_alpha <= resize(fp_sqrt3*fp_v_alpha, fp_sqrt3_v_alpha);  
@@ -167,15 +169,15 @@ begin
 					fire_w <= (OTHERS => '1');
 					
 					-- For simulation: set sector 
-					sim_Sector <= -;  
+					sim_Sector <= 0;  
 				end if; -- End 3:1 mux  
 				
 				
 				-- Each clock cycle increment multiply counter and
 				--   check if it is greater than the delay constant
 				-- Set output if count is greater than delay 
-				int_mult_delay <= int_mult_delay + 1; 
-				if int_mult_count >= int_mult_delay then
+				int_mult_counter <= int_mult_counter + 1; 
+				if int_mult_counter >= int_mult_delay then
 					-- Output fireing time calculation for Sectors 1/2
 					-- Set the output after the fp_fire_X_temp value has been calcualted
 					fire_u <= std_logic_vector(to_signed(fp_fire_u_temp, fire_u'length));
@@ -186,7 +188,7 @@ begin
 					state <= DONE; 
 					
 					-- reset multiply counter
-					int_mult_cont <= 0; 
+					int_mult_counter <= 0; 
 										
 				end if; -- end if int_mult_count >= int_mult_delay; 
 			
