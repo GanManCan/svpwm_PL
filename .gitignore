@@ -1,0 +1,40 @@
+# Directories #
+###############
+svpwm_PL.cache
+svpwm_PL.hw
+svpwm_PL.ip_user_files
+svpwm_PL.runs
+svpwm_PL.sims
+modelsim
+.Xil
+
+# Xilinix Log Files #
+#####################
+*.jou
+*.log
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Logs and databases #
+######################
+*.log
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
