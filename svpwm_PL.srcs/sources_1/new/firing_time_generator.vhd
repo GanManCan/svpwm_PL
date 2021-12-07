@@ -59,7 +59,7 @@ architecture Behavioral of firing_time_generator is
 	CONSTANT fp_t0    	: sfixed(16 downto 0)   := to_sfixed(sys_clk/pwm_freq/2, 16, 0); -- Period = number of clocks in SVPWM cycle
 																						 -- Note 2 SVPWM cycles per switching cycle
 	CONSTANT fp_0v5  		: sfixed(1 downto -1)   := to_sfixed(0.5, 1, -1); -- 0.5
-	CONSTANT fp_sqrt3_vdc : sfixed(2 downto -20) := to_sfixed(1.732/real(v_dc), 2, -20); -- sqrt(3)/v_dc
+	CONSTANT fp_sqrt3_vdc 	: sfixed(2 downto -20) := to_sfixed(1.732/real(v_dc), 2, -20); -- sqrt(3)/v_dc
 	CONSTANT fp_sqrt3_2  	: sfixed(20 downto -11) := to_sfixed(1.732/2.0, 20, -11); -- sqrt(3)/2  
 	
 	CONSTANT int_mult_delay : integer range 0 to 7 := 2; 
@@ -91,6 +91,9 @@ begin
 		fire_u <= (OTHERS => '1');
 		fire_v <= (OTHERS => '1');
 		fire_w <= (OTHERS => '1');
+		fire_time_done <= '0'; 
+		state <= IDLE;
+		
 		sim_sector <= 0; 
 	
 	elsif(clk'event and clk = '1') then
@@ -201,11 +204,11 @@ begin
 				state <= IDLE; 
 			
 			when OTHERS =>
-			  -- Invalid State
-			  -- Set outputs to 0; stall state;
-					fire_u <= (OTHERS => '1');
-					fire_v <= (OTHERS => '1');
-					fire_w <= (OTHERS => '1');
+				-- Invalid State
+				-- Set outputs to 0; stall state;
+				fire_u <= (OTHERS => '1');
+				fire_v <= (OTHERS => '1');
+				fire_w <= (OTHERS => '1');
 							
 		end case; --end case state
 	end if; -- end if(reset_n=0) 
