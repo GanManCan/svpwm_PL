@@ -93,7 +93,7 @@ begin
 			
 				when IDLE =>
 					clarke_done <= '0'; 
-					fp_yb_min_yc <= (OTHERS => '0'); 
+					--fp_yb_min_yc <= (OTHERS => '0'); 
 					
 					if(clarke_start = '1') then
 						-- Lock in y_alpha and y_beta for calculations
@@ -101,15 +101,16 @@ begin
 						fp_y_b_hold <= fp_y_b;
 						fp_y_c_hold <= fp_y_c; 
 						
+						-- Calculate subtraction used for this and next multiplication
+						fp_yb_min_yc <= resize(fp_y_b- fp_y_c, fp_yb_min_yc);
+						
 						-- Move to next state
 						state <= MULT_Y_ALPHA; 
 						
 					end if; --if(clark_starte = 1)
 				when MULT_Y_ALPHA =>
 					
-					-- Calculate subtraction used for this and next multiplication
-					fp_yb_min_yc <= resize(fp_y_b_hold - fp_y_c_hold, fp_yb_min_yc); 
-					
+					 
 					-- Calcualte y_alpha
 					fp_y_alpha <= resize(fp_2_3*fp_y_a_hold - fp_1_3*fp_yb_min_yc, fp_y_a_hold);
 					

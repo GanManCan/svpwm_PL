@@ -46,6 +46,7 @@ architecture bench of clarke_transform_tb is
   CONSTANT sine_step  : real := 2.0*MATH_PI/100.0; 
   CONSTANT real_DC_input : real := 200.0;
   signal real_sin_a, real_sin_b, real_sin_c, real_rad	: real := 0.0; 
+  signal real_y_alpha, real_y_beta : real := 0.0;
 
 begin
 
@@ -85,7 +86,15 @@ begin
 		real_sin_a <= real_DC_input*sin(real_rad);
 		real_sin_b <= real_DC_input*sin(real_rad - (2.0*MATH_PI/3.0));
 		real_sin_c <= real_DC_input*sin(real_rad - (4.0*MATH_PI/3.0));
-	  
+		
+		real_y_alpha <= 2.0*real_sin_a/3.0 - (real_sin_b - real_sin_c)/3.0;
+		real_y_beta <= 2.0/SQRT(3.0)*(real_sin_b-real_sin_c);
+		
+		-- Code to go from "real" to fixed point input to VHDL block
+		fp_y_a <= to_sfixed(real_sin_a ,20, -11);
+		fp_y_b <= to_sfixed(real_sin_b ,20, -11);
+		fp_y_c <= to_sfixed(real_sin_c ,20, -11);
+		
 		if(real_rad >= (2.0*MATH_PI-sine_step)) then
 			real_rad <= 0.0;
 		end if; -- if (real_rad >= MATH_PI)
