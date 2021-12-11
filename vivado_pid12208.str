@@ -1,0 +1,125 @@
+/*
+
+Xilinx Vivado v2020.2 (64-bit) [Major: 2020, Minor: 2]
+SW Build: 3064766 on Wed Nov 18 09:12:45 MST 2020
+IP Build: 3064653 on Wed Nov 18 14:17:31 MST 2020
+
+Process ID (PID): 12208
+License: Customer
+Mode: GUI Mode
+
+Current time: 	Thu Dec 09 21:12:51 EST 2021
+Time zone: 	Eastern Standard Time (America/New_York)
+
+OS: Windows 10
+OS Version: 10.0
+OS Architecture: amd64
+Available processors (cores): 4
+
+Screen size: 1920x1080
+Screen resolution (DPI): 100
+Available screens: 3
+Default font: family=Dialog,name=Dialog,style=plain,size=12
+Scale size: 12
+
+Java version: 	11.0.2 64-bit
+Java home: 	D:/Xilinx/Vivado/2020.2/tps/win64/jre11.0.2
+Java executable location: 	D:/Xilinx/Vivado/2020.2/tps/win64/jre11.0.2/bin/java.exe
+Java initial memory (-Xms): 	128 MB
+Java maximum memory (-Xmx):	 3 GB
+
+
+User name: 	Matt
+User home directory: C:/Users/Matt
+User working directory: C:/Users/Matt/Xilinix_projects/svpwm_PL
+User country: 	US
+User language: 	en
+User locale: 	en_US
+
+RDI_BASEROOT: D:/Xilinx/Vivado
+HDI_APPROOT: D:/Xilinx/Vivado/2020.2
+RDI_DATADIR: D:/Xilinx/Vivado/2020.2/data
+RDI_BINDIR: D:/Xilinx/Vivado/2020.2/bin
+
+Vivado preferences file location: C:/Users/Matt/AppData/Roaming/Xilinx/Vivado/2020.2/vivado.xml
+Vivado preferences directory: C:/Users/Matt/AppData/Roaming/Xilinx/Vivado/2020.2/
+Vivado layouts directory: C:/Users/Matt/AppData/Roaming/Xilinx/Vivado/2020.2/data/layouts
+PlanAhead jar file location: 	D:/Xilinx/Vivado/2020.2/lib/classes/planAhead.jar
+Vivado log file location: 	C:/Users/Matt/Xilinix_projects/svpwm_PL/vivado.log
+Vivado journal file location: 	C:/Users/Matt/Xilinix_projects/svpwm_PL/vivado.jou
+Engine tmp dir: 	C:/Users/Matt/Xilinix_projects/svpwm_PL/.Xil/Vivado-12208-DESKTOP-QE4MANU
+
+Xilinx Environment Variables
+----------------------------
+XILINX: D:/Xilinx/Vivado/2020.2/ids_lite/ISE
+XILINX_DSP: D:/Xilinx/Vivado/2020.2/ids_lite/ISE
+XILINX_HLS: D:/Xilinx/Vitis_HLS/2020.2
+XILINX_PLANAHEAD: D:/Xilinx/Vivado/2020.2
+XILINX_SDK: D:/Xilinx/Vitis/2020.2
+XILINX_VITIS: D:/Xilinx/Vitis/2020.2
+XILINX_VIVADO: D:/Xilinx/Vivado/2020.2
+XILINX_VIVADO_HLS: D:/Xilinx/Vivado/2020.2
+
+
+GUI allocated memory:	128 MB
+GUI max memory:		3,072 MB
+Engine allocated memory: 1,105 MB
+
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+*/
+
+// TclEventType: START_GUI
+// WARNING: HEventQueue.dispatchEvent() is taking  2761 ms.
+// TclEventType: PROJECT_OPEN_DIALOG
+// Tcl Message: start_gui 
+// TclEventType: PROJECT_OPEN_DIALOG
+// bz (cr):  Open Project : addNotify
+// Opening Vivado Project: C:\Users\Matt\Xilinix_projects\svpwm_PL\svpwm_PL.xpr. Version: Vivado v2020.2 
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// TclEventType: MSGMGR_MOVEMSG
+// HMemoryUtils.trashcanNow. Engine heap size: 1,105 MB. GUI used memory: 53 MB. Current time: 12/9/21, 9:12:54 PM EST
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: FILE_SET_NEW
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_CURRENT
+// TclEventType: PROJECT_DASHBOARD_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_NEW
+// Tcl Message: open_project C:/Users/Matt/Xilinix_projects/svpwm_PL/svpwm_PL.xpr 
+// Tcl Message: Scanning sources... Finished scanning sources 
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1704] No user IP repositories specified 
+// TclEventType: PROJECT_NEW
+// [GUI Memory]: 89 MB (+90496kb) [00:00:28]
+// [Engine Memory]: 1,105 MB (+1007413kb) [00:00:28]
+// [GUI Memory]: 114 MB (+21774kb) [00:00:30]
+// WARNING: HEventQueue.dispatchEvent() is taking  2113 ms.
+// Tcl Message: INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'D:/Xilinx/Vivado/2020.2/data/ip'. 
+// Tcl Message: open_project: Time (s): cpu = 00:00:22 ; elapsed = 00:00:16 . Memory (MB): peak = 1101.727 ; gain = 0.000 
+// Project name: svpwm_PL; location: C:/Users/Matt/Xilinix_projects/svpwm_PL; part: xc7z020clg400-1
+// WARNING: HEventQueue.dispatchEvent() is taking  1278 ms.
+// WARNING: HSwingWorker (Update Runs Swing Worker) is taking 7266 ms. Increasing delay to 3000 ms.
+dismissDialog("Open Project"); // bz
+// WARNING: HEventQueue.dispatchEvent() is taking  1562 ms.
+selectTab((HResource) null, (HResource) null, "Tcl Console", 0); // aK
+selectTab((HResource) null, (String) null, (HResource) null, "Tcl Console", 0, false, true); // aK - Double Click
+selectCodeEditor(RDIResource.TclConsoleView_TCL_CONSOLE_CODE_EDITOR, 78, 594); // dS
+maximizeFrame(PAResourceOtoP.PAViews_TCL_CONSOLE, "Tcl Console"); // az
+// WARNING: HEventQueue.dispatchEvent() is taking  1683 ms.
+// Tcl Command: 'rdi::info_commands {device::*}'
+// Tcl Command: 'rdi::info_commands {debug::*}'
+// Tcl Command: 'rdi::info_commands {*}'

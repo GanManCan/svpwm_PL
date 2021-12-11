@@ -27,10 +27,10 @@ use IEEE.FIXED_PKG.ALL;
 
 entity svpwm_top_level is
   Port ( 
-    clk 	  : in std_logic; 
+    clk 	  : in std_logic;
 	reset_n   : in std_logic; 
-    v_alpha   : in std_logic_vector(31 downto 0); 
-	v_beta    : in std_logic_vector(31 downto 0); 
+    --v_alpha   : in std_logic_vector(31 downto 0); 
+	--v_beta    : in std_logic_vector(31 downto 0); 
 	gate_u, gate_u_n : out std_logic;
 	gate_v, gate_v_n : out std_logic; 
 	gate_w, gate_w_n : out std_logic
@@ -48,11 +48,12 @@ architecture Behavioral of svpwm_top_level is
 	  v_dc            : INTEGER := 200
 	); 
     port (
-	  clk    		: IN std_logic;
-	  reset_n		: IN std_logic;
-	  ena 			: IN std_logic; 
-	  fp_v_alpha 	: IN sfixed(20 downto -11); 
-	  fp_v_beta   	: IN sfixed(20 downto -11);
+	  clk    			: IN std_logic;
+	  reset_n			: IN std_logic;
+	  fire_time_start	: IN std_logic; 
+	  fp_v_alpha 		: IN sfixed(20 downto -11); 
+	  fp_v_beta   		: IN sfixed(20 downto -11);
+	  fire_time_done 	:OUT std_logic;
 	  -- Output firiing sectors 
 	  fire_u 	: OUT std_logic_vector(bits_resolution-1 downto 0);
 	  fire_v 	: OUT std_logic_vector(bits_resolution-1 downto 0);
@@ -84,21 +85,28 @@ architecture Behavioral of svpwm_top_level is
 	);
   end component; 
   
-  -- Signal Declarations
-  signal ena 		: std_logic := '1'; 
-  signal fp_v_alpha	: sfixed(20 downto -11);
-  signal fp_v_beta	: sfixed(20 downto -11);  
-  signal fire_u 	: std_logic_vector(31 downto 0);
-  signal fire_v 	: std_logic_vector(31 downto 0);
-  signal fire_w 	: std_logic_vector(31 downto 0);
+	-- Signal Declarations
+	signal ena 		: std_logic := '1'; 
+	signal fire_time_start, fire_time_done : std_logic := '0';
+	signal fp_v_alpha	: sfixed(20 downto -11);
+	signal fp_v_beta	: sfixed(20 downto -11);  
+	signal fire_u 	: std_logic_vector(31 downto 0);
+	signal fire_v 	: std_logic_vector(31 downto 0);
+	signal fire_w 	: std_logic_vector(31 downto 0);
+  
+  
+	-- Temp signals
+	signal v_alpha   : std_logic_vector(31 downto 0) := (OTHERS => '0'); 
+	signal v_beta    : std_logic_vector(31 downto 0) := (OTHERS => '0'); 
+	
 begin
 
   fp_v_alpha <= to_sfixed(signed(v_alpha), fp_v_alpha);  
   fp_v_beta <= to_sfixed(signed(v_beta), fp_v_beta);  
 
   firing_time_generator_1:  firing_time_generator 
-    port map(clk => clk, reset_n => reset_n, ena => ena, 
-			 fp_v_alpha => fp_v_alpha, fp_v_beta => fp_v_beta,
+    port map(clk => clk, reset_n => reset_n, fire_time_start => fire_time_start,
+			 fire_time_done => fire_time_done, fp_v_alpha => fp_v_alpha, fp_v_beta => fp_v_beta,
 			 fire_u => fire_u, fire_v => fire_v, fire_w => fire_w);
 	  
    svpwm_1: svpwm

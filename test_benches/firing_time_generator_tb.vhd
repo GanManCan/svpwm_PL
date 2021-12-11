@@ -61,27 +61,27 @@ begin
 	
 	fp_v_alpha <= to_sfixed(40,fp_v_alpha); 
 	fp_v_beta <= to_sfixed(10,fp_v_beta); 
-	wait for clock_period*4;
+	wait for clock_period*10;
 	
 	fp_v_alpha <= to_sfixed(10,fp_v_alpha); 
 	fp_v_beta <= to_sfixed(40,fp_v_beta); 
-	wait for clock_period*4;
+	wait for clock_period*10;
 	
 	fp_v_alpha <= to_sfixed(-40,fp_v_alpha); 
 	fp_v_beta <= to_sfixed(10,fp_v_beta); 
-	wait for clock_period*4;
+	wait for clock_period*10;
 	
 	fp_v_alpha <= to_sfixed(-40,fp_v_alpha); 
 	fp_v_beta <= to_sfixed(-10,fp_v_beta); 
-	wait for clock_period*4;
+	wait for clock_period*10;
 	
 	fp_v_alpha <= to_sfixed(10,fp_v_alpha); 
 	fp_v_beta <= to_sfixed(-40,fp_v_beta); 
-	wait for clock_period*4;
+	wait for clock_period*10;
 	
 	fp_v_alpha <= to_sfixed(40,fp_v_alpha); 
 	fp_v_beta <= to_sfixed(-10,fp_v_beta); 
-	wait for clock_period*4;
+	wait for clock_period*10;
 	
 	
     -- Put initialisation code here

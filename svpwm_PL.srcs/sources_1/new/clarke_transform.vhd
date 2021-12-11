@@ -93,8 +93,7 @@ begin
 			
 				when IDLE =>
 					clarke_done <= '0'; 
-					--fp_yb_min_yc <= (OTHERS => '0'); 
-					
+								
 					if(clarke_start = '1') then
 						-- Lock in y_alpha and y_beta for calculations
 						fp_y_a_hold <= fp_y_a; 
