@@ -8,10 +8,11 @@ svpwm_PL.sim/
 modelsim/
 .Xil/
 
-# Xilinix Log Files #
+# Xilinix Files #
 #####################
 *.jou
 *.log
+*.str
 
 # Compiled source #
 ###################
