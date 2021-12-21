@@ -44,6 +44,7 @@ entity open_loop_ref is
 		clk 				: IN std_logic;
 		reset_n				: IN std_logic;
 		en					: IN std_logic;
+		freq				: IN std_logic_vector(7 downto 0); 
 		fp_v_alpha_open		: OUT sfixed (20 downto -11);  
 		fp_v_beta_open		: OUT sfixed (20 downto -11)
 	);
@@ -64,9 +65,14 @@ architecture behavioral of open_loop_ref is
 	type STATE_TYPE is (IDLE, CALC_FREQ_COUNTER, V_ALPHA_LOOKUP, V_BETA_LOOKUP)
 	signal state	: STATE_TYPE; 
 	
+	
+	
 	-- Signal Declarations
-	temp_fp_v_alpha	: sfixed (20 downto -11); 
-	temp_fp_v_beta	: sfixed (20 downto -11);
+	signal saved_freq		: std_logic_vector(7 downto 0); 
+	signal rtc_clk_counter	: integer range 0 to 16777215 := 0;
+	signal rtc_clk_setpoint : integer := sys_clk/60;  -- default to 60 Hz setpoitn. 
+	signal temp_fp_v_alpha	: sfixed (20 downto -11); 
+	signal temp_fp_v_beta	: sfixed (20 downto -11);
 
 
 
@@ -77,13 +83,20 @@ system_clk : process(clk)
 begin
 	if(reset_n = '0') then 
 		-- Asynchronious reset
+		saved_freq <= conv_std_logic_vector(60, saved_freq'length); -- Set to 60 Hz default value. 
+		rtc_clk_counter <= 0; -- Reset RTC Counter
+		rtc_clk_setpoint <= sys_clk/60; -- Set RTC counter to default 60 Hz
+	
 	else if(clk'event and clk = '1')
 		
 		-- RTC Counter Description
-		-- Every clock cycle incremnet the counter, 
-		rtc_clk_counter <= rtc_clk_counter + 1;
+		-- If enabled, increment counter every clock cycle 
+		if(en = '1') then
+			rtc_clk_counter <= rtc_clk_counter + 1;
+		end if; --if(en = '1')
 		
-		if (rtc_clk_counter = 0) then
+		-- Check if RTC clk is above setpoing
+		if (rtc_clk_counter >= rtc_clk_setpoint) then
 			rtc_clk_enable <= '1';
 		else
 			rtc_clk_enable <= '0';
@@ -91,11 +104,29 @@ begin
 	
 		-- Create State machine
 		case STATE is
-			when IDLE =>
 			
 			when CALC_FREQ_COUNTER =>
+				-- Calculate new frequency counter setpoint
+				-- Move to Idle state
+				rtc_clk_setpoint <= sys_clk/saved_freq;
+				state <= IDLE;
+				
+			when IDLE =>
 			
+				-- Check for new frequency setpoint,
+				-- if new, update saved_setpoint and calc new conutner
+				if (freq != saved_freq) then
+					saved_freq <= freq;
+					state <= CALC_FREQ_COUNTER; 
+				end if; --if(freq != prev_freq
+				
+				if(rtc_clk_counter >= rtc_clk_setpoint) then
+					-- reset counter, lookup value 
+					rtc_clk_counter <= 0; 
+					state <= V_ALPHA_LOOKUP; 
+				
 			when V_ALPHA_LOOKUP =>
+				
 			
 			when V_BETA_LOOKUP =>
 			

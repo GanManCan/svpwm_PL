@@ -39,11 +39,28 @@ begin
 p_table : process(i_clk)
 begin
   if(rising_edge(i_clk)) then
-	-- Add input checking to i_addr value to hard coded sine table size
+	
+	
+	-- Map the output 0 to pi/2 to entire sine wave 
+	-- 0 to pi/2 output 
 	if(to_integer(unsigned(i_addr)) >= 0 and to_integer(unsigned(i_addr)) <= TABLE_SIZE) then
+		-- output 
 		-- if i_add is in range output data
-		o_data  <= std_logic_vector(to_unsigned(C_SIN_TABLE(to_integer(unsigned(i_addr))),o_data'length));
+		o_data  <= std_logic_vector(to_signed(C_SIN_TABLE(to_integer(unsigned(i_addr))),o_data'length));
+	
+	-- pi/2 to pi output 
+	elsif((to_integer(unsigned(i_addr)) > TABLE_SIZE) and (to_integer(unsigned(i_addr)) < 2*TABLE_SIZE))
+		int_iaddr_temp <= TABLE_SIZE - addr
+	
+	-- pi to 3*pi/2
+	elsif((to_integer(unsigned(i_addr)) > 2*TABLE_SIZE) and (to_integer(unsigned(i_addr)) < 3*TABLE_SIZE))
+	
+	
+	-- 3*pi/2 to 2*p
+	elsif((to_integer(unsigned(i_addr)) > 3*TABLE_SIZE) and (to_integer(unsigned(i_addr)) < 4*TABLE_SIZE))	
+	
 	else
+		-- Add input checking to i_addr value to hard coded sine table size
 		-- Default output 0 
 		o_data <= (others => '0'); 
 	end if; -- range check 
