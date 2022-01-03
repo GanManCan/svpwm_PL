@@ -12,8 +12,8 @@ architecture bench of open_loop_ref_tb is
   
   component open_loop_ref
   generic(
-	sys_clk		: integer;
-	freq_bits 	: integer 
+	sys_clk		: integer := 50_000_000;
+	freq_bits 	: integer := 15
   );
   port (
  		clk 				: IN std_logic;

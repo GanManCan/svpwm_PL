@@ -163,7 +163,7 @@ begin
 				when V_ALPHA_LOOKUP =>
 				-- Lookup V_Alpha from Sine table 
 					
-					-- Output v_alpha from lookup table 
+					-- Output v_alpha from lookup table into temp register
 					-- Change from std_logic_vector to sfixed
 					temp_fp_v_alpha <= resize(to_sfixed(temp_o_data, temp_o_data'length-1, 0)/SIN_SCALE_FACTOR, temp_fp_v_alpha);
 					
@@ -172,12 +172,8 @@ begin
 					state <= V_BETA_LOOKUP;
 				
 				when V_BETA_LOOKUP =>
-					-- Lookup V_Beta from Sine Table
-					
-					-- Output v_beta from lookup table
-					-- Change from std_logic_vector to sfixed
-					temp_fp_v_beta <= resize(to_sfixed(temp_o_data, temp_o_data'length-1, 0)/SIN_SCALE_FACTOR, temp_fp_v_alpha);
-					
+				-- Lookup V_Beta from Sine Table
+				-- Convert v_alpha sine table to fixed poing value. 
 					state <= IDLE; 
 				
 				when OTHERS =>
