@@ -60,7 +60,7 @@ entity adc is
     );    
 end adc;
 
-architecture Behavioral of adc is
+architecture rtl of adc is
   
   signal FLOAT_VBRAM_ALARM : STD_LOGIC;
   signal FLOAT_MUXADDR   : STD_LOGIC_VECTOR (4 downto 0);
@@ -311,4 +311,4 @@ begin
 	end process;
 
 
-end Behavioral;
+end rtl;

@@ -55,7 +55,7 @@ entity open_loop_ref is
 	);
 end open_loop_ref;
 
-architecture behavioral of open_loop_ref is
+architecture rtl of open_loop_ref is
 	
 	-- sine lookup table component descriptor
 	component sine_lookup
@@ -191,4 +191,4 @@ begin
 		end if; -- if(reset_n = '0'); 
 
 	end process system_clk;
-end behavioral;
+end rtl;

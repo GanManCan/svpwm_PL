@@ -54,7 +54,7 @@ entity svpwm is
   );
 end svpwm;
 
-architecture Behavioral of svpwm is
+architecture rtl of svpwm is
 
   -- CONSTANT DECLARATION
   CONSTANT int_t0    : INTEGER   := sys_clk/pwm_freq/2; -- Period = number of clocks in SVPWM cycle
@@ -192,4 +192,4 @@ begin
   end process; --process(clk,reset_n)	
   
 
-end Behavioral;
+end rtl;

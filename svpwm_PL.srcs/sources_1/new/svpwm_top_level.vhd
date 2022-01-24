@@ -37,7 +37,7 @@ entity svpwm_top_level is
   );
 end svpwm_top_level;
 
-architecture Behavioral of svpwm_top_level is
+architecture rtl of svpwm_top_level is
   
   -- firing_time_generator component descriptor
   component firing_time_generator
@@ -117,4 +117,4 @@ begin
 			  gate_w => gate_w, gate_w_n => gate_w_n);
 
 
-end Behavioral;
+end rtl;

@@ -54,7 +54,7 @@ entity clarke_transform is
 	);
 end clarke_transform;
 
-architecture logic of clarke_transform is
+architecture rtl of clarke_transform is
 
 	-- Create State Machine Type
 	type STATE_TYPE is (IDLE, MULT_Y_ALPHA, MULT_Y_BETA, DONE);
@@ -150,4 +150,4 @@ begin
 			end case; -- case state
 		end if; --if(reset_n=0)
 	end process; 
-end logic;
+end rtl;
