@@ -29,25 +29,25 @@ entity firing_time_generator is
     sys_clk         : INTEGER := 50_000_000;  --system clock freq in Hz
     pwm_freq        : INTEGER := 3_000;      --PWM switching freq in Hz
     bits_resolution : INTEGER := 32;           --bits of resolution for duty cycle
-		v_dc            : INTEGER := 200
+	v_dc            : INTEGER := 200
     );         
 	
   PORT (
     clk    			: IN std_logic;
-		reset_n			: IN std_logic;
-		fire_time_start	: IN std_logic; 
-		fp_v_alpha 	: IN sfixed(20 downto -11); 
-		fp_v_beta   : IN sfixed(20 downto -11);
-		fire_time_done	: OUT std_logic; 
-		-- Output firiing sectors 
-		fire_u 	: OUT std_logic_vector(bits_resolution-1 downto 0);
-		fire_v 	: OUT std_logic_vector(bits_resolution-1 downto 0);
-		fire_w 	: OUT std_logic_vector(bits_resolution-1 downto 0)
+	reset_n			: IN std_logic;
+	fire_time_start	: IN std_logic; 
+	fp_v_alpha 	: IN sfixed(20 downto -11); 
+	fp_v_beta   : IN sfixed(20 downto -11);
+	fire_time_done	: OUT std_logic; 
+	-- Output firiing sectors 
+	fire_u 	: OUT std_logic_vector(bits_resolution-1 downto 0);
+	fire_v 	: OUT std_logic_vector(bits_resolution-1 downto 0);
+	fire_w 	: OUT std_logic_vector(bits_resolution-1 downto 0)
 	); 
 
 end firing_time_generator;
 
-architecture rtl of firing_time_generator is
+architecture Behavioral of firing_time_generator is
 	-- fp == fixed point
 	  
 	-- Create State Machine type
@@ -214,4 +214,4 @@ begin
 	end if; -- end if(reset_n=0) 
   end process; 
 
-end rtl;
+end Behavioral;
