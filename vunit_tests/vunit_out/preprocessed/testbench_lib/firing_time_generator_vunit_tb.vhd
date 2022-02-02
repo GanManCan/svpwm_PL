@@ -93,11 +93,13 @@ architecture tb of firing_time_generator_vunit_tb is
   signal test_fire       : std_logic_vector(bits_resolution-1 downto 0);
 
   -- Spy Signal
-  --signal dut_path :string := "/firing_time_generator_vunit_tb/firing_time_generator_tb_inst/";
-  --signal spy_sim_sector : integer;
+  type STATE_TYPE is (IDLE,MULTIPLY, DONE);
 
-  alias spy_sim_sector is
-    <<signal.firing_time_generator_tb_inst.sim_sector : integer >>;
+  alias spy_sim_sector is 
+   <<signal .firing_time_generator_tb_inst.sim_sector : integer >>;
+
+  alias spy_state is
+    <<signal .firing_time_generator_tb_inst.state : STATE_TYPE >>;
 
 begin -- start of architecture -- 
   -------------------------------------------------------------------------- 
@@ -133,20 +135,6 @@ begin -- start of architecture --
 
   --------------------------------------------------------------------------
   --------------------------------------------------------------------------
-  -------------------------- spy_process PROCESS ---------------------------
-  --------------------------------------------------------------------------
-  --------------------------------------------------------------------------
-
-
-  --spy_process : process
-  --begin
-  --  init_signal_spy(dut_path & "sim_sector","spy_sim_sector", 1);
-  --  wait;
-  --end process spy_process;
-
-
-  --------------------------------------------------------------------------
-  --------------------------------------------------------------------------
   -------------------------- TEST_RUNNER PROCESS ---------------------------
   --------------------------------------------------------------------------
   --------------------------------------------------------------------------
@@ -166,18 +154,80 @@ begin -- start of architecture --
         --  fire_u/v/w = '111..111'
       ----------------------------------------------------------------------
       if run("check_reset_values") then
-        info("--------------------------------------------------------------------------------", line_num => 169, file_name => "firing_time_generator_vunit_tb.vhd");
-        info("TEST CASE: switches_off_output_check", line_num => 170, file_name => "firing_time_generator_vunit_tb.vhd");
-        info("--------------------------------------------------------------------------------", line_num => 171, file_name => "firing_time_generator_vunit_tb.vhd");
+        info("--------------------------------------------------------------------------------", line_num => 157, file_name => "firing_time_generator_vunit_tb.vhd");
+        info("TEST CASE: switches_off_output_check", line_num => 158, file_name => "firing_time_generator_vunit_tb.vhd");
+        info("--------------------------------------------------------------------------------", line_num => 159, file_name => "firing_time_generator_vunit_tb.vhd");
         test_fire <= (OTHERS => '1');
         wait until rising_edge(clk);
-        check(fire_u = test_fire, "fire_u equals 1", line_num => 174, file_name => "firing_time_generator_vunit_tb.vhd");
-        check(fire_v = test_fire, "fire_v equals 1", line_num => 175, file_name => "firing_time_generator_vunit_tb.vhd");
-        check(fire_w = test_fire, "fire_w equals 1", line_num => 176, file_name => "firing_time_generator_vunit_tb.vhd");
-        check(fire_time_done = '0', "fire_time_done equals 0", line_num => 177, file_name => "firing_time_generator_vunit_tb.vhd");
-        check(spy_sim_sector = 1, "spy_sim_sector equals 0", line_num => 178, file_name => "firing_time_generator_vunit_tb.vhd");
+        check(fire_u = test_fire, "fire_u equals 1", line_num => 162, file_name => "firing_time_generator_vunit_tb.vhd");
+        check(fire_v = test_fire, "fire_v equals 1", line_num => 163, file_name => "firing_time_generator_vunit_tb.vhd");
+        check(fire_w = test_fire, "fire_w equals 1", line_num => 164, file_name => "firing_time_generator_vunit_tb.vhd");
+        check(fire_time_done = '0', "fire_time_done equals 0", line_num => 165, file_name => "firing_time_generator_vunit_tb.vhd");
+        check(spy_sim_sector = 0, "spy_sim_sector equals 0", line_num => 166, file_name => "firing_time_generator_vunit_tb.vhd");
+        check(spy_state = IDLE, "spy_state is IDLE", line_num => 167, file_name => "firing_time_generator_vunit_tb.vhd");
         wait for 1 ps; 
-        info("==== TEST CASE FINISHED =====", line_num => 180, file_name => "firing_time_generator_vunit_tb.vhd");
+        info("==== TEST CASE FINISHED =====", line_num => 169, file_name => "firing_time_generator_vunit_tb.vhd");
+
+      ----------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+      -- Check each state in single calulation
+      -- Expected Result:
+        -- 
+      --------------------------------------------------------------------
+      ELSIF run("single_calculation_state_check") THEN
+        info("--------------------------------------------------------------------------------", line_num => 178, file_name => "firing_time_generator_vunit_tb.vhd");
+        info("TEST CASE: single_calculation_state_check", line_num => 179, file_name => "firing_time_generator_vunit_tb.vhd");
+        info("--------------------------------------------------------------------------------", line_num => 180, file_name => "firing_time_generator_vunit_tb.vhd");
+        wait until reset_n = '1';
+        wait for c_clk_period;
+        fire_time_start <= '1';
+
+        
+        wait until rising_edge(clk);
+        fire_time_start <= '0';
+
+        wait for c_clk_period;
+        check(spy_state = MULTIPLY, "spy_state is MULTIPLY", line_num => 190, file_name => "firing_time_generator_vunit_tb.vhd");
+
+        -- wait for multiplier delay
+        wait for 3*c_clk_period;
+        check(spy_state = DONE, "spy_state is done", line_num => 194, file_name => "firing_time_generator_vunit_tb.vhd");
+
+        wait for c_clk_period;
+        check(spy_state = IDLE, "spy_state resets to idle", line_num => 197, file_name => "firing_time_generator_vunit_tb.vhd");
+        check(fire_time_done = '1', "fire_time_done_flag raised", line_num => 198, file_name => "firing_time_generator_vunit_tb.vhd");
+
+        wait for c_clk_period;
+        check(spy_state = IDLE, "spy_state is still idle", line_num => 201, file_name => "firing_time_generator_vunit_tb.vhd");
+        check(fire_time_done = '0', "fire_time_done_flag raised", line_num => 202, file_name => "firing_time_generator_vunit_tb.vhd");        
+
+
+        info("==== TEST CASE FINISHED =====", line_num => 205, file_name => "firing_time_generator_vunit_tb.vhd");
+
+
+      ----------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+      -- Check each outputs of inputs and outputs form file
+      -- Expected Result:
+        -- 
+      --------------------------------------------------------------------
+      --ELSIF run("many_calculation_check") THEN
+      --  info("--------------------------------------------------------------------------------", line_num => 215, file_name => "firing_time_generator_vunit_tb.vhd");
+      --  info("TEST CASE: many_calculation_check", line_num => 216, file_name => "firing_time_generator_vunit_tb.vhd");
+      --  info("--------------------------------------------------------------------------------", line_num => 217, file_name => "firing_time_generator_vunit_tb.vhd");
+      --  wait until reset_n = '1';
+
+      ----------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+      -- Check that out of bounds values go to default state
+      -- Expected Result:
+        -- 
+      --------------------------------------------------------------------
+      --ELSIF run("out_of_bounds_check") THEN
+      --  info("--------------------------------------------------------------------------------", line_num => 227, file_name => "firing_time_generator_vunit_tb.vhd");
+      --  info("TEST CASE: out_of_bounds_check", line_num => 228, file_name => "firing_time_generator_vunit_tb.vhd");
+      --  info("--------------------------------------------------------------------------------", line_num => 229, file_name => "firing_time_generator_vunit_tb.vhd");
+      --  wait until reset_n = '1';
 
       end if; -- for test_suite
     end loop test_cases_loop;

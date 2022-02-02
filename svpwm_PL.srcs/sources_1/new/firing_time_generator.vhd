@@ -92,6 +92,7 @@ begin
 		fire_v <= (OTHERS => '1');
 		fire_w <= (OTHERS => '1');
 		fire_time_done <= '0'; 
+		int_mult_counter <= 0;
 		state <= IDLE;
 		
 		sim_sector <= 0; 

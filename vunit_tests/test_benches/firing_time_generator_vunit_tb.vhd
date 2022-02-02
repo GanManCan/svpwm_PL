@@ -93,11 +93,13 @@ architecture tb of firing_time_generator_vunit_tb is
   signal test_fire       : std_logic_vector(bits_resolution-1 downto 0);
 
   -- Spy Signal
-  --signal dut_path :string := "/firing_time_generator_vunit_tb/firing_time_generator_tb_inst/";
-  --signal spy_sim_sector : integer;
+  type STATE_TYPE is (IDLE,MULTIPLY, DONE);
 
-  alias spy_sim_sector is
-    <<signal.firing_time_generator_tb_inst.sim_sector : integer >>;
+  alias spy_sim_sector is 
+   <<signal .firing_time_generator_tb_inst.sim_sector : integer >>;
+
+  alias spy_state is
+    <<signal .firing_time_generator_tb_inst.state : STATE_TYPE >>;
 
 begin -- start of architecture -- 
   -------------------------------------------------------------------------- 
@@ -133,20 +135,6 @@ begin -- start of architecture --
 
   --------------------------------------------------------------------------
   --------------------------------------------------------------------------
-  -------------------------- spy_process PROCESS ---------------------------
-  --------------------------------------------------------------------------
-  --------------------------------------------------------------------------
-
-
-  --spy_process : process
-  --begin
-  --  init_signal_spy(dut_path & "sim_sector","spy_sim_sector", 1);
-  --  wait;
-  --end process spy_process;
-
-
-  --------------------------------------------------------------------------
-  --------------------------------------------------------------------------
   -------------------------- TEST_RUNNER PROCESS ---------------------------
   --------------------------------------------------------------------------
   --------------------------------------------------------------------------
@@ -176,8 +164,70 @@ begin -- start of architecture --
         check(fire_w = test_fire, "fire_w equals 1");
         check(fire_time_done = '0', "fire_time_done equals 0");
         check(spy_sim_sector = 0, "spy_sim_sector equals 0");
+        check(spy_state = IDLE, "spy_state is IDLE");
         wait for 1 ps; 
         info("==== TEST CASE FINISHED =====");
+
+      ----------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+      -- Check each state in single calulation
+      -- Expected Result:
+        -- 
+      --------------------------------------------------------------------
+      ELSIF run("single_calculation_state_check") THEN
+        info("--------------------------------------------------------------------------------");
+        info("TEST CASE: single_calculation_state_check");
+        info("--------------------------------------------------------------------------------");
+        wait until reset_n = '1';
+        wait for c_clk_period;
+        fire_time_start <= '1';
+
+        
+        wait until rising_edge(clk);
+        fire_time_start <= '0';
+
+        wait for c_clk_period;
+        check(spy_state = MULTIPLY, "spy_state is MULTIPLY");
+
+        -- wait for multiplier delay
+        wait for 3*c_clk_period;
+        check(spy_state = DONE, "spy_state is done");
+
+        wait for c_clk_period;
+        check(spy_state = IDLE, "spy_state resets to idle");
+        check(fire_time_done = '1', "fire_time_done_flag raised");
+
+        wait for c_clk_period;
+        check(spy_state = IDLE, "spy_state is still idle");
+        check(fire_time_done = '0', "fire_time_done_flag raised");        
+
+
+        info("==== TEST CASE FINISHED =====");
+
+
+      ----------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+      -- Check each outputs of inputs and outputs form file
+      -- Expected Result:
+        -- 
+      --------------------------------------------------------------------
+      --ELSIF run("many_calculation_check") THEN
+      --  info("--------------------------------------------------------------------------------");
+      --  info("TEST CASE: many_calculation_check");
+      --  info("--------------------------------------------------------------------------------");
+      --  wait until reset_n = '1';
+
+      ----------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+      -- Check that out of bounds values go to default state
+      -- Expected Result:
+        -- 
+      --------------------------------------------------------------------
+      --ELSIF run("out_of_bounds_check") THEN
+      --  info("--------------------------------------------------------------------------------");
+      --  info("TEST CASE: out_of_bounds_check");
+      --  info("--------------------------------------------------------------------------------");
+      --  wait until reset_n = '1';
 
       end if; -- for test_suite
     end loop test_cases_loop;

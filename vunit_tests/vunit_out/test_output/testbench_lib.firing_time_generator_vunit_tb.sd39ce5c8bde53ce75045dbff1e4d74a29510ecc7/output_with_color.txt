@@ -1,0 +1,76 @@
+# vsim -modelsimini C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/modelsim/modelsim.ini -wlf C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/test_output/testbench_lib.firing_time_generator_vunit_tb.sd39ce5c8bde53ce75045dbff1e4d74a29510ecc7/modelsim/vsim.wlf -quiet -t ps -onfinish stop testbench_lib.firing_time_generator_vunit_tb(tb) -L vunit_lib -L design_lib -L testbench_lib -g/firing_time_generator_vunit_tb/runner_cfg="active python runner : true,enabled_test_cases : single_calculation_state_check,output path : C::/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/test_output/testbench_lib.firing_time_generator_vunit_tb.sd39ce5c8bde53ce75045dbff1e4d74a29510ecc7/,tb path : C::/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/test_benches/,use_color : true" 
+# Start time: 21:36:14 on Feb 01,2022
+# ** Warning: (vsim-1425) C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd(99): Absolute pathname for a VHDL external name does not start
+# with an entity name that is a design root. Instead, an object with the name 'firing_time_generator_tb_inst'
+# was found in the scope of design root 'firing_time_generator_vunit_tb'. This object was used as the starting
+# point of the external name.
+#    Time: 0 ps  Iteration: 0  Instance: /firing_time_generator_vunit_tb File: C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd
+# ** Warning: (vsim-1425) C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd(102): Absolute pathname for a VHDL external name does not start
+# with an entity name that is a design root. Instead, an object with the name 'firing_time_generator_tb_inst'
+# was found in the scope of design root 'firing_time_generator_vunit_tb'. This object was used as the starting
+# point of the external name.
+#    Time: 0 ps  Iteration: 0  Instance: /firing_time_generator_vunit_tb File: C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd
+# ** Warning: (vsim-1425) C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd(99): Absolute pathname for a VHDL external name does not start
+# with an entity name that is a design root. Instead, an object with the name 'firing_time_generator_tb_inst'
+# was found in the scope of design root 'firing_time_generator_vunit_tb'. This object was used as the starting
+# point of the external name.
+#    Time: 0 ps  Iteration: 0  Instance: /firing_time_generator_vunit_tb File: C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd
+# ** Warning: (vsim-8523) Cannot reference the signal "/firing_time_generator_vunit_tb/firing_time_generator_tb_inst/sim_Sector" before it has been elaborated.
+#    Time: 0 ps  Iteration: 0  Instance: /firing_time_generator_vunit_tb File: C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd
+# ** Warning: (vsim-1425) C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd(102): Absolute pathname for a VHDL external name does not start
+# with an entity name that is a design root. Instead, an object with the name 'firing_time_generator_tb_inst'
+# was found in the scope of design root 'firing_time_generator_vunit_tb'. This object was used as the starting
+# point of the external name.
+#    Time: 0 ps  Iteration: 0  Instance: /firing_time_generator_vunit_tb File: C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd
+# ** Warning: (vsim-8523) Cannot reference the signal "/firing_time_generator_vunit_tb/firing_time_generator_tb_inst/state" before it has been elaborated.
+#    Time: 0 ps  Iteration: 0  Instance: /firing_time_generator_vunit_tb File: C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd
+# ** Warning: Design size of 21971 statements exceeds ModelSim-Intel FPGA Starter Edition recommended capacity.
+# Expect performance to be adversely affected.
+#             [22;96;49m0 ps[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - -------------------------------------------------------------------------------- (firing_time_generator_vunit_tb.vhd:178)
+#             [22;96;49m0 ps[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - TEST CASE: single_calculation_state_check (firing_time_generator_vunit_tb.vhd:179)
+#             [22;96;49m0 ps[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - -------------------------------------------------------------------------------- (firing_time_generator_vunit_tb.vhd:180)
+# ** Warning: :ieee:fixed_generic_pkg:">=": metavalue detected, returning FALSE
+#    Time: 110 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:">=": metavalue detected, returning FALSE
+#    Time: 110 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:"<=": metavalue detected, returning FALSE
+#    Time: 110 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:"<=": metavalue detected, returning FALSE
+#    Time: 110 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:"<=": metavalue detected, returning FALSE
+#    Time: 110 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:">=": metavalue detected, returning FALSE
+#    Time: 110 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+#        [22;96;49m110000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - spy_state is MULTIPLY (firing_time_generator_vunit_tb.vhd:190)
+# ** Warning: :ieee:fixed_generic_pkg:">=": metavalue detected, returning FALSE
+#    Time: 130 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:">=": metavalue detected, returning FALSE
+#    Time: 130 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:"<=": metavalue detected, returning FALSE
+#    Time: 130 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:"<=": metavalue detected, returning FALSE
+#    Time: 130 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:"<=": metavalue detected, returning FALSE
+#    Time: 130 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:">=": metavalue detected, returning FALSE
+#    Time: 130 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:">=": metavalue detected, returning FALSE
+#    Time: 150 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:">=": metavalue detected, returning FALSE
+#    Time: 150 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:"<=": metavalue detected, returning FALSE
+#    Time: 150 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:"<=": metavalue detected, returning FALSE
+#    Time: 150 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:"<=": metavalue detected, returning FALSE
+#    Time: 150 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+# ** Warning: :ieee:fixed_generic_pkg:">=": metavalue detected, returning FALSE
+#    Time: 150 ns  Iteration: 0  Instance: /firing_time_generator_vunit_tb/firing_time_generator_tb_inst
+#        [22;96;49m170000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - spy_state is done (firing_time_generator_vunit_tb.vhd:194)
+#        [22;96;49m190000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - spy_state resets to idle (firing_time_generator_vunit_tb.vhd:197)
+#        [22;96;49m190000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - fire_time_done_flag raised (firing_time_generator_vunit_tb.vhd:198)
+#        [22;96;49m210000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - spy_state is still idle (firing_time_generator_vunit_tb.vhd:201)
+#        [22;96;49m210000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - fire_time_done_flag raised (firing_time_generator_vunit_tb.vhd:202)
+#        [22;96;49m210000 ps[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - ==== TEST CASE FINISHED ===== (firing_time_generator_vunit_tb.vhd:205)
+# Break in Subprogram stop at C:/Python310/Lib/site-packages/vunit_hdl-4.6.1rc0-py3.10.egg/vunit/vhdl/core/src/stop_body_2008p.vhd line 13
+# Stopped at C:/Python310/Lib/site-packages/vunit_hdl-4.6.1rc0-py3.10.egg/vunit/vhdl/core/src/stop_body_2008p.vhd line 13

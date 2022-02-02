@@ -1,54 +1,40 @@
 # vsim -modelsimini C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/modelsim/modelsim.ini -wlf C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/test_output/testbench_lib.firing_time_generator_vunit_tb.c0cf3aa98cbb80e0a590b03851861810378d9138f/modelsim/vsim.wlf -quiet -t ps -onfinish stop testbench_lib.firing_time_generator_vunit_tb(tb) -L vunit_lib -L design_lib -L testbench_lib -g/firing_time_generator_vunit_tb/runner_cfg="active python runner : true,enabled_test_cases : check_reset_values,output path : C::/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/test_output/testbench_lib.firing_time_generator_vunit_tb.c0cf3aa98cbb80e0a590b03851861810378d9138f/,tb path : C::/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/test_benches/,use_color : true" 
-# Start time: 20:37:21 on Jan 31,2022
-# ** Warning: (vsim-1425) C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd(100): Absolute pathname for a VHDL external name does not start
+# Start time: 21:26:54 on Feb 01,2022
+# ** Warning: (vsim-1425) C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd(99): Absolute pathname for a VHDL external name does not start
 # with an entity name that is a design root. Instead, an object with the name 'firing_time_generator_tb_inst'
 # was found in the scope of design root 'firing_time_generator_vunit_tb'. This object was used as the starting
 # point of the external name.
 #    Time: 0 ps  Iteration: 0  Instance: /firing_time_generator_vunit_tb File: C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd
-# ** Warning: (vsim-1425) C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd(100): Absolute pathname for a VHDL external name does not start
+# ** Warning: (vsim-1425) C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd(102): Absolute pathname for a VHDL external name does not start
+# with an entity name that is a design root. Instead, an object with the name 'firing_time_generator_tb_inst'
+# was found in the scope of design root 'firing_time_generator_vunit_tb'. This object was used as the starting
+# point of the external name.
+#    Time: 0 ps  Iteration: 0  Instance: /firing_time_generator_vunit_tb File: C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd
+# ** Warning: (vsim-1425) C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd(99): Absolute pathname for a VHDL external name does not start
 # with an entity name that is a design root. Instead, an object with the name 'firing_time_generator_tb_inst'
 # was found in the scope of design root 'firing_time_generator_vunit_tb'. This object was used as the starting
 # point of the external name.
 #    Time: 0 ps  Iteration: 0  Instance: /firing_time_generator_vunit_tb File: C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd
 # ** Warning: (vsim-8523) Cannot reference the signal "/firing_time_generator_vunit_tb/firing_time_generator_tb_inst/sim_Sector" before it has been elaborated.
 #    Time: 0 ps  Iteration: 0  Instance: /firing_time_generator_vunit_tb File: C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd
-# ** Warning: Design size of 21921 statements exceeds ModelSim-Intel FPGA Starter Edition recommended capacity.
+# ** Warning: (vsim-1425) C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd(102): Absolute pathname for a VHDL external name does not start
+# with an entity name that is a design root. Instead, an object with the name 'firing_time_generator_tb_inst'
+# was found in the scope of design root 'firing_time_generator_vunit_tb'. This object was used as the starting
+# point of the external name.
+#    Time: 0 ps  Iteration: 0  Instance: /firing_time_generator_vunit_tb File: C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd
+# ** Warning: (vsim-8523) Cannot reference the signal "/firing_time_generator_vunit_tb/firing_time_generator_tb_inst/state" before it has been elaborated.
+#    Time: 0 ps  Iteration: 0  Instance: /firing_time_generator_vunit_tb File: C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd
+# ** Warning: Design size of 21970 statements exceeds ModelSim-Intel FPGA Starter Edition recommended capacity.
 # Expect performance to be adversely affected.
-#             [22;96;49m0 ps[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - -------------------------------------------------------------------------------- (firing_time_generator_vunit_tb.vhd:169)
-#             [22;96;49m0 ps[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - TEST CASE: switches_off_output_check (firing_time_generator_vunit_tb.vhd:170)
-#             [22;96;49m0 ps[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - -------------------------------------------------------------------------------- (firing_time_generator_vunit_tb.vhd:171)
-#         [22;96;49m10000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - fire_u equals 1 (firing_time_generator_vunit_tb.vhd:174)
-#         [22;96;49m10000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - fire_v equals 1 (firing_time_generator_vunit_tb.vhd:175)
-#         [22;96;49m10000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - fire_w equals 1 (firing_time_generator_vunit_tb.vhd:176)
-#         [22;96;49m10000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - fire_time_done equals 0 (firing_time_generator_vunit_tb.vhd:177)
-#         [22;96;49m10000 ps[0m - [1;37;49mcheck[0m                -   [1;31;49mERROR[0m - spy_sim_sector equals 0 (firing_time_generator_vunit_tb.vhd:178)
-# ** Failure: Stop simulation on log level error
-#    Time: 10 ns  Iteration: 0  Process: /firing_time_generator_vunit_tb/test_runner File: C:/Python310/Lib/site-packages/vunit_hdl-4.6.1rc0-py3.10.egg/vunit/vhdl/core/src/core_pkg.vhd
-# Break in Subprogram core_failure at C:/Python310/Lib/site-packages/vunit_hdl-4.6.1rc0-py3.10.egg/vunit/vhdl/core/src/core_pkg.vhd line 84
-# Stopped at C:/Python310/Lib/site-packages/vunit_hdl-4.6.1rc0-py3.10.egg/vunit/vhdl/core/src/core_pkg.vhd line 84
-# 
-# Test Run Failed!
-# 
-# Stack trace result from 'tb' command
-#  C:/Python310/Lib/site-packages/vunit_hdl-4.6.1rc0-py3.10.egg/vunit/vhdl/core/src/core_pkg.vhd 84 return [address 0xff2b6b6a] Subprogram core_failure
-# called from  C:/Python310/Lib/site-packages/vunit_hdl-4.6.1rc0-py3.10.egg/vunit/vhdl/logging/src/logger_pkg-body.vhd 749 return [address 0xff2c6f0e] Subprogram decrease_stop_count
-# called from  C:/Python310/Lib/site-packages/vunit_hdl-4.6.1rc0-py3.10.egg/vunit/vhdl/logging/src/logger_pkg-body.vhd 744 return [address 0xff2c6ff6] Subprogram decrease_stop_count
-# called from  C:/Python310/Lib/site-packages/vunit_hdl-4.6.1rc0-py3.10.egg/vunit/vhdl/logging/src/logger_pkg-body.vhd 923 return [address 0xff2c169d] Subprogram log
-# called from  C:/Python310/Lib/site-packages/vunit_hdl-4.6.1rc0-py3.10.egg/vunit/vhdl/check/src/checker_pkg-body.vhd 121 return [address 0xff2d499c] Subprogram failing_check
-# called from  C:/Python310/Lib/site-packages/vunit_hdl-4.6.1rc0-py3.10.egg/vunit/vhdl/check/src/check.vhd 196 return [address 0xff2d6493] Subprogram check
-# called from  C:/Python310/Lib/site-packages/vunit_hdl-4.6.1rc0-py3.10.egg/vunit/vhdl/check/src/check.vhd 226 return [address 0xff2d66a3] Subprogram check
-# called from  C:/Users/mgann/Xilinix_Projects/svpwm_PL/vunit_tests/vunit_out/preprocessed/testbench_lib/firing_time_generator_vunit_tb.vhd 178 return [address 0xff61ad22] Process test_runner
-# 
-# 
-# Surrounding code from 'see' command
-#   79 :   begin
-#   80 :     if core_failure_is_mocked then
-#   81 :       set(core_failure_mock_state, core_failure_called_idx, 1);
-#   82 :       reallocate(to_string_ptr(get(core_failure_mock_state, core_failure_message_idx)), msg);
-#   83 :     else
-# ->84 :       report msg severity failure;
-#   85 :     end if;
-#   86 :   end;
-#   87 : 
-#   88 :   procedure check_core_failure(msg : string := "") is
-# 
+#             [22;96;49m0 ps[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - -------------------------------------------------------------------------------- (firing_time_generator_vunit_tb.vhd:157)
+#             [22;96;49m0 ps[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - TEST CASE: switches_off_output_check (firing_time_generator_vunit_tb.vhd:158)
+#             [22;96;49m0 ps[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - -------------------------------------------------------------------------------- (firing_time_generator_vunit_tb.vhd:159)
+#         [22;96;49m10000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - fire_u equals 1 (firing_time_generator_vunit_tb.vhd:162)
+#         [22;96;49m10000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - fire_v equals 1 (firing_time_generator_vunit_tb.vhd:163)
+#         [22;96;49m10000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - fire_w equals 1 (firing_time_generator_vunit_tb.vhd:164)
+#         [22;96;49m10000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - fire_time_done equals 0 (firing_time_generator_vunit_tb.vhd:165)
+#         [22;96;49m10000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - spy_sim_sector equals 0 (firing_time_generator_vunit_tb.vhd:166)
+#         [22;96;49m10000 ps[0m - [1;37;49mcheck[0m                -    [1;32;49mPASS[0m - spy_state is IDLE (firing_time_generator_vunit_tb.vhd:167)
+#         [22;96;49m10001 ps[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - ==== TEST CASE FINISHED ===== (firing_time_generator_vunit_tb.vhd:169)
+# Break in Subprogram stop at C:/Python310/Lib/site-packages/vunit_hdl-4.6.1rc0-py3.10.egg/vunit/vhdl/core/src/stop_body_2008p.vhd line 13
+# Stopped at C:/Python310/Lib/site-packages/vunit_hdl-4.6.1rc0-py3.10.egg/vunit/vhdl/core/src/stop_body_2008p.vhd line 13
