@@ -204,7 +204,22 @@ begin -- start of architecture --
 
         info("==== TEST CASE FINISHED =====");
 
+      ----------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+      -- Check the output of a single calculation
+        -- 
+      --------------------------------------------------------------------
+      ELSIF run("single_calculation_check") THEN
+        info("--------------------------------------------------------------------------------");
+        info("TEST CASE: single_calculation_check");
+        info("--------------------------------------------------------------------------------");
+        
+        fp_v_alpha <= to_sfixed(1.731, 20, -11);
+        fp_v_alpha <= (10, 20, -11);
+        wait until reset_n = '1';
 
+
+     
       ----------------------------------------------------------------------
       -- TEST CASE DESCRIPTION:
       -- Check each outputs of inputs and outputs form file
