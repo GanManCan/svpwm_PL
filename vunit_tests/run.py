@@ -15,7 +15,7 @@ TEST_PATH = ROOT / "vunit_tests" / "test_benches"
 print(TEST_PATH)
 
 # create VUnit instance
-VU = VUnit.from_argv()
+VU = VUnit.from_argv(compile_builtins=False)
 VU.enable_location_preprocessing()
 
 # create design library and add source files
