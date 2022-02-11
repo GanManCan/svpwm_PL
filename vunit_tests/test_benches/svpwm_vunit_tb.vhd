@@ -3,7 +3,7 @@
 --  % PROJECT     : SVPWM_PL      %                                 --
 --  % VERSION     :                  %                                 --
 --  % CREATED_BY  : Matt Gannon      %                                 --
---  % DATE_CREATED: 2021-01-23        %                                 --
+--  % DATE_CREATED: 2021-02-07        %                                 --
 --                                                                        --
 --  DESCRIPTION:                                                          --
 --                                                                        --
@@ -16,13 +16,9 @@
 --                                                                        --
 ----------------------------------------------------------------------------
 --  TODO LIST                                                             --
---  Test reset
---  Test Initialization 
---  Test Do Nothin Until Receive Start Signal
--- 	Test Outputs for correct values
---     Test values for each sector 
---  Test out-of-bounds values
---  T                                         --
+--  Test value lock in at top/bottom of counter
+--  Test dead time 
+--                                          --
 ----------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------
@@ -68,7 +64,6 @@ architecture tb of svpwm_vunit_tb is
   --------------------------------------------------------------------------
   -- CONSTANTS DECLARATION --
 
-  -- spy signals
 
   -- simulation constants :
   constant c_clk_period : time := 20 ns;
@@ -97,10 +92,13 @@ architecture tb of svpwm_vunit_tb is
   signal gate_w_l : std_logic;  
  
   -- Simulation Signals --
-
+  signal sim_counter : INTEGER := 0; 
+  signal sim_int_counter_period :INTEGER := sys_clk/pwm_freq/2;
 
 
   -- Spy Signals
+  alias spy_counter is 
+   <<signal .svpwm_tb_inst.counter : integer range -65533 to 65533 >>; 
   
 begin -- start of architecture -- 
   -------------------------------------------------------------------------- 
@@ -165,18 +163,35 @@ begin -- start of architecture --
         info("--------------------------------------------------------------------------------");
         info("TEST CASE: svpwm_check_reset_values");
         info("--------------------------------------------------------------------------------");
-        reset_n <= '0';
         wait until rising_edge(clk);
         wait until rising_edge(clk);
         wait for 1 ps;
-        check(gate_u = '0', "gate_u reset value equals 1");
-        check(gate_u_l = '0', "gate_u_l reset value equals 1");
-        check(gate_v = '0', "gate_v reset value equals 1");
-        check(gate_v_l = '0', "gate_v_l reset value equals 1");
-        check(gate_w = '0', "gate_w reset value equals 1");
-        check(gate_w_l = '0', "gate_w_l reset value equals 1");
+        check(gate_u = '0',   "gate_u reset check");
+        check(gate_u_l = '0', "gate_u_l reset check");
+        check(gate_v = '0',   "gate_v reset check");
+        check(gate_v_l = '0', "gate_v_l reset check");
+        check(gate_w = '0',   "gate_w reset check");
+        check(gate_w_l = '0', "gate_w_l reset check");
         
         info("==== TEST CASE FINISHED =====");  
+
+      ----------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+      -- Check that out of bounds values go to default state
+      -- Expected Result:
+        -- 
+      --------------------------------------------------------------------
+      ELSIF run("svpwm_counter_check") THEN
+        info("--------------------------------------------------------------------------------");
+        info("TEST CASE: svpwm_counter check");
+        info("--------------------------------------------------------------------------------");
+        wait until reset_n = '1';
+        sim_counter <= 0;
+
+        -- Loop through and check the counter up and down
+        wait for 1 ps; 
+
+
 
 
       ----------------------------------------------------------------------

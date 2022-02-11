@@ -42,15 +42,15 @@ entity svpwm is
     clk       : IN std_logic;
     reset_n   : IN std_logic;
     ena       : IN std_logic ;
-	fire_u    : IN std_logic_vector(bits_resolution-1 downto 0);
-	fire_v    : IN std_logic_vector(bits_resolution-1 downto 0);
-	fire_w    : IN std_logic_vector(bits_resolution-1 downto 0);
-	gate_u    : OUT std_logic; -- Phase U Gate Drive signal [Top Transistor]
-	gate_u_l  : OUT std_logic; -- Phase U Gate Drive signal [Bottom Transistor]
-	gate_v    : OUT std_logic; -- Phase V Gate Drive signal [Top Transistor]
-	gate_v_l  : OUT std_logic; -- Phase V Gate Drive signal [Bottom Transistor]
-	gate_w    : OUT std_logic; -- Phase W Gate Drive signal [Top Transistor]
-	gate_w_l  : OUT std_logic -- Phase W Gate Drive signal [Bottom Transistor]
+		fire_u    : IN std_logic_vector(bits_resolution-1 downto 0);
+		fire_v    : IN std_logic_vector(bits_resolution-1 downto 0);
+		fire_w    : IN std_logic_vector(bits_resolution-1 downto 0);
+		gate_u    : OUT std_logic; -- Phase U Gate Drive signal [Top Transistor]
+		gate_u_l  : OUT std_logic; -- Phase U Gate Drive signal [Bottom Transistor]
+		gate_v    : OUT std_logic; -- Phase V Gate Drive signal [Top Transistor]
+		gate_v_l  : OUT std_logic; -- Phase V Gate Drive signal [Bottom Transistor]
+		gate_w    : OUT std_logic; -- Phase W Gate Drive signal [Top Transistor]
+		gate_w_l  : OUT std_logic -- Phase W Gate Drive signal [Bottom Transistor]
   );
 end svpwm;
 
@@ -62,12 +62,12 @@ architecture rtl of svpwm is
   CONSTANT dead_time_cnt  	: INTEGER := sys_clk/1000/1000*dead_time_ns/1000;
   CONSTANT dead_time_cnt_2  : INTEGER := dead_time_cnt/2; 
 													
-  signal count_dir 		: std_logic  := '1'; -- 1 to count up; 0 to count down  
+  signal count_dir 			: std_logic  := '1'; -- 1 to count up; 0 to count down  
   signal counter        : integer range -65533 to 65533  := 0;   
   
-  signal sig_gate_u     : std_logic := '0'; 
-  signal sig_gate_v		: std_logic := '0'; 
-  
+  signal lock_fire_u   : std_logic_Vector(bits_resolution-1 downto 0) := (OTHERS => '1');
+  signal lock_fire_v   : std_logic_Vector(bits_resolution-1 downto 0) := (OTHERS => '1');
+  signal lock_fire_w   : std_logic_Vector(bits_resolution-1 downto 0) := (OTHERS => '1');
 
 
 begin
@@ -82,6 +82,9 @@ begin
 		  gate_v_l <= '0';
 		  gate_w <= '0'; 
 		  gate_w_l <= '0';
+		  lock_fire_u <= fire_u; 
+		  lock_fire_v <= fire_v;
+		  lock_fire_w <= fire_w; 
 	
 		elsif(clk'event and clk = '1') then
 	
@@ -90,18 +93,24 @@ begin
 	  	  
 	  	  counter <= counter + 1; -- increment counter
 
-				-- If counter reaches period, change decrement
+				-- If counter reaches period, change decrement, lock in fire value
 				if(counter >= int_t0-1) then
 		  		count_dir <= '0'; 
+		  		lock_fire_u <= fire_u; 
+		  		lock_fire_v <= fire_v;
+		  		lock_fire_w <= fire_w;
 				end if; -- if(count > int_t0)
       
       else
 
         counter <= counter - 1; 
 				
-				-- If counter reaches period, change to increment
+				-- If counter reaches period, change to increment, lock in fire value
 				if(counter <= 1) then
 		  		count_dir <= '1'; 
+		  		lock_fire_u <= fire_u; 
+		  		lock_fire_v <= fire_v;
+		  		lock_fire_w <= fire_w;
 				end if; -- if(count <= 0)
     	end if; -- if(count_dir = '1') 
 	  
@@ -109,24 +118,24 @@ begin
 		  -----------------------------------------------
 	      -- Output Logic for Phase U
 		  -----------------------------------------------
-		  if (to_integer(signed(fire_u)) >= int_t0) then
+		  if (to_integer(signed(lock_fire_u)) >= int_t0) then
 		    -- If fireing phase = period -> always output 0
 				gate_u <= '0';
 				gate_u_l <= '1';
 			
-		  elsif (to_integer(signed(fire_u)) >= (counter-dead_time_cnt_2))
-	             and (to_integer(signed(fire_u)) <= (counter+dead_time_cnt_2)) then	  
+		  elsif (to_integer(signed(lock_fire_u)) >= (counter-dead_time_cnt_2))
+	             and (to_integer(signed(lock_fire_u)) <= (counter+dead_time_cnt_2)) then	  
 				-- Check if gate is in dead_time
 				-- Output both switches to 0 during dead time
 				gate_u <= '0';
 				gate_u_l <= '0';
 	      
-		  elsif	((counter+dead_time_cnt_2) > to_integer(signed(fire_u))) then
+		  elsif	((counter+dead_time_cnt_2) > to_integer(signed(lock_fire_u))) then
 	      -- Set output to 1 if counter is greater than fire signal. 
 				gate_u <= '1';
 	      gate_u_l <= '0';
 
-	    elsif ((counter-dead_time_cnt_2) < to_integer(signed(fire_u))) then
+	    elsif ((counter-dead_time_cnt_2) < to_integer(signed(lock_fire_u))) then
 	      -- Set output to 0 if counter is less than fire signal (and dead_time); 
 	      gate_u <= '0';
 	      gate_u_l <= '1';
@@ -135,29 +144,29 @@ begin
 	      -- Catch all, set to 'safe' 0/0 output.
 	      gate_u <= '0'; 
 	      gate_u_l <= '0'; 
-	    end if; --if (to_integer(signed(fire_u) >= int_t0)		
+	    end if; --if (to_integer(signed(lock_fire_u) >= int_t0)		
 		
 		  -----------------------------------------------
 	      -- Output Logic for Phase V
 		  -----------------------------------------------
-		  if (to_integer(signed(fire_v)) >= int_t0) then
+		  if (to_integer(signed(lock_fire_v)) >= int_t0) then
 		    -- If fireing phase = period -> always output 0
 				gate_v <= '0';
 				gate_v_l <= '1';
 			
-		  elsif (to_integer(signed(fire_v)) >= (counter-dead_time_cnt_2))
-	             and (to_integer(signed(fire_v)) <= (counter+dead_time_cnt_2)) then	  
+		  elsif (to_integer(signed(lock_fire_v)) >= (counter-dead_time_cnt_2))
+	             and (to_integer(signed(lock_fire_v)) <= (counter+dead_time_cnt_2)) then	  
 				-- Check if gate is in dead_time
 				-- Output both switches to 0 during dead time
 				gate_v <= '0';
 				gate_v_l <= '0';
 		      
-		  elsif	((counter+dead_time_cnt_2) > to_integer(signed(fire_v))) then
+		  elsif	((counter+dead_time_cnt_2) > to_integer(signed(lock_fire_v))) then
 	      -- Set output to 1 if counter is greater than fire signal. 
 				gate_v <= '1';
 	      gate_v_l <= '0';
 
-	    elsif ((counter-dead_time_cnt_2) < to_integer(signed(fire_v))) then
+	    elsif ((counter-dead_time_cnt_2) < to_integer(signed(lock_fire_v))) then
 	      -- Set output to 0 if counter is less than fire signal (and dead_time); 
 	      gate_v <= '0';
 	      gate_v_l <= '1';
@@ -166,29 +175,29 @@ begin
 	      -- Catch all, set to 'safe' 0/0 output.
 	      gate_v <= '0'; 
 	      gate_v_l <= '0'; 
-	    end if; --if (to_integer(signed(fire_v) >= int_t0)
+	    end if; --if (to_integer(signed(lock_fire_v) >= int_t0)
 		  
 		  -----------------------------------------------
 	      -- Output Logic for Phase W
 		  -----------------------------------------------
-		  if (to_integer(signed(fire_w)) >= int_t0) then
+		  if (to_integer(signed(lock_fire_w)) >= int_t0) then
 		    -- If fireing phase = period -> always output 0
 				gate_w <= '0';
 				gate_w_l <= '1';
 			
-		  elsif (to_integer(signed(fire_w)) >= (counter-dead_time_cnt_2))
-	             and (to_integer(signed(fire_w)) <= (counter+dead_time_cnt_2)) then	  
+		  elsif (to_integer(signed(lock_fire_w)) >= (counter-dead_time_cnt_2))
+	             and (to_integer(signed(lock_fire_w)) <= (counter+dead_time_cnt_2)) then	  
 				-- Check if gate is in dead_time
 				-- Output both switches to 0 during dead time
 				gate_w <= '0';
 				gate_w_l <= '0';
 		      
-		  elsif	((counter+dead_time_cnt_2) > to_integer(signed(fire_w))) then
+		  elsif	((counter+dead_time_cnt_2) > to_integer(signed(lock_fire_w))) then
 	      -- Set output to 1 if counter is greater than fire signal. 
 				gate_w <= '1';
 	      gate_w_l <= '0';
 	      
-	    elsif ((counter-dead_time_cnt_2) < to_integer(signed(fire_w))) then
+	    elsif ((counter-dead_time_cnt_2) < to_integer(signed(lock_fire_w))) then
 	      -- Set output to 0 if counter is less than fire signal (and dead_time); 
 	      gate_w <= '0';
 	      gate_w_l <= '1';
@@ -197,7 +206,7 @@ begin
 	      -- Catch all, set to 'safe' 0/0 output.
 	      gate_w <= '0'; 
 	      gate_w_l <= '0'; 
-	    end if; --if (to_integer(signed(fire_w) >= int_t0)
+	    end if; --if (to_integer(signed(lock_fire_w) >= int_t0)
 		
 	  end if; --if(reset_n = '0')	
   end process; --process(clk,reset_n)	
