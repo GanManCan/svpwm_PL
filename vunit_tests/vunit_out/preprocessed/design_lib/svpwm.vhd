@@ -42,15 +42,15 @@ entity svpwm is
     clk       : IN std_logic;
     reset_n   : IN std_logic;
     ena       : IN std_logic ;
-		fire_u    : IN std_logic_vector(bits_resolution-1 downto 0);
-		fire_v    : IN std_logic_vector(bits_resolution-1 downto 0);
-		fire_w    : IN std_logic_vector(bits_resolution-1 downto 0);
-		gate_u    : OUT std_logic; -- Phase U Gate Drive signal [Top Transistor]
-		gate_u_l  : OUT std_logic; -- Phase U Gate Drive signal [Bottom Transistor]
-		gate_v    : OUT std_logic; -- Phase V Gate Drive signal [Top Transistor]
-		gate_v_l  : OUT std_logic; -- Phase V Gate Drive signal [Bottom Transistor]
-		gate_w    : OUT std_logic; -- Phase W Gate Drive signal [Top Transistor]
-		gate_w_l  : OUT std_logic -- Phase W Gate Drive signal [Bottom Transistor]
+	fire_u    : IN std_logic_vector(bits_resolution-1 downto 0);
+	fire_v    : IN std_logic_vector(bits_resolution-1 downto 0);
+	fire_w    : IN std_logic_vector(bits_resolution-1 downto 0);
+	gate_u    : OUT std_logic; -- Phase U Gate Drive signal [Top Transistor]
+	gate_u_l  : OUT std_logic; -- Phase U Gate Drive signal [Bottom Transistor]
+	gate_v    : OUT std_logic; -- Phase V Gate Drive signal [Top Transistor]
+	gate_v_l  : OUT std_logic; -- Phase V Gate Drive signal [Bottom Transistor]
+	gate_w    : OUT std_logic; -- Phase W Gate Drive signal [Top Transistor]
+	gate_w_l  : OUT std_logic -- Phase W Gate Drive signal [Bottom Transistor]
   );
 end svpwm;
 

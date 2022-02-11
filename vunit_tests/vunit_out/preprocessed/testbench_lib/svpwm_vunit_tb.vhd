@@ -162,21 +162,21 @@ begin -- start of architecture --
         --  fire_u/v/w = '111..111'
       ----------------------------------------------------------------------
       if run("svpwm_check_reset_values") then
-        info("--------------------------------------------------------------------------------");
-        info("TEST CASE: svpwm_check_reset_values");
-        info("--------------------------------------------------------------------------------");
+        info("--------------------------------------------------------------------------------", line_num => 165, file_name => "svpwm_vunit_tb.vhd");
+        info("TEST CASE: svpwm_check_reset_values", line_num => 166, file_name => "svpwm_vunit_tb.vhd");
+        info("--------------------------------------------------------------------------------", line_num => 167, file_name => "svpwm_vunit_tb.vhd");
         reset_n <= '0';
         wait until rising_edge(clk);
         wait until rising_edge(clk);
         wait for 1 ps;
-        check(gate_u = '0', "gate_u reset value equals 1");
-        check(gate_u_l = '0', "gate_u_l reset value equals 1");
-        check(gate_v = '0', "gate_v reset value equals 1");
-        check(gate_v_l = '0', "gate_v_l reset value equals 1");
-        check(gate_w = '0', "gate_w reset value equals 1");
-        check(gate_w_l = '0', "gate_w_l reset value equals 1");
+        check(gate_u = '0', "gate_u reset value equals 1", line_num => 172, file_name => "svpwm_vunit_tb.vhd");
+        check(gate_u_l = '0', "gate_u_l reset value equals 1", line_num => 173, file_name => "svpwm_vunit_tb.vhd");
+        check(gate_v = '0', "gate_v reset value equals 1", line_num => 174, file_name => "svpwm_vunit_tb.vhd");
+        check(gate_v_l = '0', "gate_v_l reset value equals 1", line_num => 175, file_name => "svpwm_vunit_tb.vhd");
+        check(gate_w = '0', "gate_w reset value equals 1", line_num => 176, file_name => "svpwm_vunit_tb.vhd");
+        check(gate_w_l = '0', "gate_w_l reset value equals 1", line_num => 177, file_name => "svpwm_vunit_tb.vhd");
         
-        info("==== TEST CASE FINISHED =====");  
+        info("==== TEST CASE FINISHED =====", line_num => 179, file_name => "svpwm_vunit_tb.vhd");  
 
 
       ----------------------------------------------------------------------
@@ -186,9 +186,9 @@ begin -- start of architecture --
         -- 
       --------------------------------------------------------------------
       --ELSIF run("out_of_bounds_check") THEN
-      --  info("--------------------------------------------------------------------------------");
-      --  info("TEST CASE: out_of_bounds_check");
-      --  info("--------------------------------------------------------------------------------");
+      --  info("--------------------------------------------------------------------------------", line_num => 189, file_name => "svpwm_vunit_tb.vhd");
+      --  info("TEST CASE: out_of_bounds_check", line_num => 190, file_name => "svpwm_vunit_tb.vhd");
+      --  info("--------------------------------------------------------------------------------", line_num => 191, file_name => "svpwm_vunit_tb.vhd");
       --  wait until reset_n = '1';
 
       end if; -- for test_suite

@@ -306,7 +306,7 @@ begin -- start of architecture --
      
         file_close(file_VECTORS);
 
-        check(1 =  1, "Check if 1 equals 0", line_num => 309, file_name => "firing_time_generator_vunit_tb.vhd");
+        
 
 
       ----------------------------------------------------------------------

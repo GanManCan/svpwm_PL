@@ -21,6 +21,7 @@ VU.enable_location_preprocessing()
 # create design library and add source files
 design_lib = VU.add_library("design_lib")
 design_lib.add_source_files([DUT_PATH / "firing_time_generator.vhd"])
+design_lib.add_source_files([DUT_PATH / "svpwm.vhd"])
 
 # create testbench library
 testbench_lib = VU.add_library("testbench_lib")
