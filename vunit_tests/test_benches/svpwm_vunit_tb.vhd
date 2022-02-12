@@ -40,6 +40,7 @@ LIBRARY DESIGN_LIB;
 --USE DESIGN_LIB.MOTOR_PKG.ALL;
 
 LIBRARY TESTBENCH_LIB;
+USE TESTBENCH_LIB.SVPWM_PL_TB_PKG.ALL;
 --USE TB_LIB.MOTOR_TB_PKG.ALL;
 
 library modelsim_lib;
@@ -72,7 +73,7 @@ architecture tb of svpwm_vunit_tb is
   -- INTERNAL SIGNALS DECLARATION --
   -- DUT constants
   constant sys_clk         : INTEGER := 50_000_000;  
-  constant pwm_freq        : INTEGER := 3_000;      
+  constant pwm_freq        : INTEGER := 100_000;      
   constant bits_resolution : INTEGER := 32;           
   constant v_dc            : INTEGER := 200;
   constant dead_time_ns : INTEGER := 800; 
@@ -81,9 +82,9 @@ architecture tb of svpwm_vunit_tb is
   signal clk      : std_logic := '0';
   signal reset_n  : std_logic := '0';
   signal ena      : std_logic := '1';
-  signal fire_u   : std_logic_vector(bits_resolution-1 downto 0);
-  signal fire_v   : std_logic_vector(bits_resolution-1 downto 0);
-  signal fire_w   : std_logic_vector(bits_resolution-1 downto 0);
+  signal fire_u   : std_logic_vector(bits_resolution-1 downto 0) := (OTHERS => '0');
+  signal fire_v   : std_logic_vector(bits_resolution-1 downto 0) := (OTHERS => '0');
+  signal fire_w   : std_logic_vector(bits_resolution-1 downto 0) := (OTHERS => '0');
   signal gate_u   : std_logic;
   signal gate_u_l : std_logic;
   signal gate_v   : std_logic;
@@ -94,6 +95,21 @@ architecture tb of svpwm_vunit_tb is
   -- Simulation Signals --
   signal sim_counter : INTEGER := 0; 
   signal sim_int_counter_period :INTEGER := sys_clk/pwm_freq/2;
+  signal sim_counter_dir : std_logic := '1'; -- 1 is up direction
+
+  signal check_enable         : std_logic := '1'; 
+  signal gate_u_start_event   : std_logic := '0';
+  signal gate_u_end_event     : std_logic := '0';
+  signal gate_u_l_start_event : std_logic := '0';
+  signal gate_u_l_end_event   : std_logic := '0';
+  signal gate_v_start_event   : std_logic := '0';
+  signal gate_v_end_event     : std_logic := '0';
+  signal gate_v_l_start_event : std_logic := '0';
+  signal gate_v_l_end_event   : std_logic := '0';
+  signal gate_w_start_event   : std_logic := '0';
+  signal gate_w_end_event     : std_logic := '0';
+  signal gate_w_l_start_event : std_logic := '0';
+  signal gate_w_l_end_event   : std_logic := '0';
 
 
   -- Spy Signals
@@ -183,17 +199,60 @@ begin -- start of architecture --
       --------------------------------------------------------------------
       ELSIF run("svpwm_counter_check") THEN
         info("--------------------------------------------------------------------------------");
-        info("TEST CASE: svpwm_counter check");
+        info("TEST CASE: svpwm_counter_check");
         info("--------------------------------------------------------------------------------");
+        
         wait until reset_n = '1';
         sim_counter <= 0;
 
         -- Loop through and check the counter up and down
-        wait for 1 ps; 
+        for i in 0 to 3*sim_int_counter_period loop
+
+          if(sim_counter_dir = '1') then
+            sim_counter <= sim_counter + 1;
+            if(sim_counter = (sim_int_counter_period-1)) then
+              sim_counter_dir <= '0';
+            end if; -- if(sim_counter = sim_int_counter_period)
+
+          elsif(sim_counter_dir = '0') then
+            sim_counter <= sim_counter - 1;
+            if(sim_counter = 1) then
+              sim_counter_dir <= '1';
+            end if; -- if(sim_counter = sim_int_counter_period)
+          end if; 
+
+          wait for 1 ps; 
+          check_equal(spy_counter, sim_counter, result("Check spy_counter equal sim_counter"));
+
+          wait until rising_edge(clk);
+
+        end loop; -- for i in 0 to 4*sim_int_countperiod; 
+
+      ----------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+      -- 
+      -- Expected Result:
+        -- 
+      --------------------------------------------------------------------
+      ELSIF run("svpwm_gate_pulse_width_check") THEN
+        info("--------------------------------------------------------------------------------");
+        info("TEST CASE: svpwm_gate_pulse_width_check");
+        info("--------------------------------------------------------------------------------");
+        
+        fire_u <= std_logic_vector(to_signed(100,fire_u'length));
+
+        wait until reset_n = '1';
+        wait until rising_edge(clk); 
+
+        fire_u <= std_logic_vector(to_signed(250,fire_u'length));
+        
+
+        wait for C_CLK_PERIOD*sim_int_counter_period*2;
 
 
+        check(1 = 0, result("1 equals 0"));
 
-
+        
       ----------------------------------------------------------------------
       -- TEST CASE DESCRIPTION:
       -- Check that out of bounds values go to default state
@@ -212,5 +271,72 @@ begin -- start of architecture --
     wait for 20 ns;
     test_runner_cleanup(runner); -- end of simulation 
   end process test_runner; 
+
+
+  --------------------------------------------------------------------------------
+  -- Gate signal stability checker
+  ------------------------------------------------------------------------------
+
+  -- gate_u stability check is high 
+  check_stable(clock       => clk, 
+               en          => check_enable,
+               start_event => gate_u_start_event,
+               end_event   => gate_u_end_event,
+               expr        => gate_u,
+               msg         => result("Gate_U switched incorrectly"),
+               active_clock_edge => rising_edge,
+               allow_restart     => false);
+
+--  -- gate_u_l stability check is high 
+--  check_stable(clock       => clk, 
+--               en          => check_enable,
+--               start_event => gate_u_l_start_event,
+--               end_event   => gate_u_l_end_event,
+--               expr        => gate_u_l,
+--               msg         => result("Gate_U_L switched incorrectly"),
+--               active_clock_edge => rising_edge,
+--               allow_restart     => false);
+
+--  -- gate_v stability check is high 
+--  check_stable(clock       => clk, 
+--               en          => check_enable,
+--               start_event => gate_v_start_event,
+--               end_event   => gate_v_end_event,
+--               expr        => gate_v,
+--               msg         => result("Gate_V switched incorrectly"),
+--               active_clock_edge => rising_edge,
+--               allow_restart     => false);
+
+--  -- gate_v_l stability check is high 
+--  check_stable(clock       => clk, 
+--               en          => check_enable,
+--               start_event => gate_v_l_start_event,
+--               end_event   => gate_v_l_end_event,
+--               expr        => gate_v_l,
+--               msg         => result("Gate_V_L switched incorrectly"),
+--               active_clock_edge => rising_edge,
+--               allow_restart     => false);
+
+---- gate_w stability check is high 
+--  check_stable(clock       => clk, 
+--               en          => check_enable,
+--               start_event => gate_w_start_event,
+--               end_event   => gate_w_end_event,
+--               expr        => gate_w,
+--               msg         => result("Gate_W switched incorrectly"),
+--               active_clock_edge => rising_edge,
+--               allow_restart     => false);
+
+--  -- gate_u_l stability check is high 
+--  check_stable(clock       => clk, 
+--               en          => check_enable,
+--               start_event => gate_w_l_start_event,
+--               end_event   => gate_w_l_end_event,
+--               expr        => gate_w_l,
+--               msg         => result("Gate_W_L switched incorrectly"),
+--               active_clock_edge => rising_edge,
+--               allow_restart     => false);
+
+
 
 end architecture tb; 
