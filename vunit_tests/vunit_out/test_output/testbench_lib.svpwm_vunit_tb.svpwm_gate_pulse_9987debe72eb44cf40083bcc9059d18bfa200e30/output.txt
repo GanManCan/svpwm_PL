@@ -1,2 +1,0 @@
-skip (P=0 S=1 F=0 T=1) testbench_lib.svpwm_vunit_tb.svpwm_gate_pulse_width_check (690.4 seconds)
-

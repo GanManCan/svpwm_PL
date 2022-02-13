@@ -73,7 +73,7 @@ architecture tb of svpwm_vunit_tb is
   -- INTERNAL SIGNALS DECLARATION --
   -- DUT constants
   constant sys_clk         : INTEGER := 50_000_000;  
-  constant pwm_freq        : INTEGER := 100_000;      
+  constant pwm_freq        : INTEGER := 3_000;      
   constant bits_resolution : INTEGER := 32;           
   constant v_dc            : INTEGER := 200;
   constant dead_time_ns : INTEGER := 800; 
@@ -239,18 +239,20 @@ begin -- start of architecture --
         info("TEST CASE: svpwm_gate_pulse_width_check");
         info("--------------------------------------------------------------------------------");
         
-        fire_u <= std_logic_vector(to_signed(100,fire_u'length));
+        fire_u <= std_logic_vector(to_signed(1500,fire_u'length));
+        fire_v <= std_logic_vector(to_signed(3000,fire_v'length));
+        fire_w <= std_logic_vector(to_signed(4500,fire_w'length));
 
         wait until reset_n = '1';
         wait until rising_edge(clk); 
 
-        fire_u <= std_logic_vector(to_signed(250,fire_u'length));
+        --fire_u <= std_logic_vector(to_signed(100,fire_u'length));
         
 
         wait for C_CLK_PERIOD*sim_int_counter_period*2;
 
 
-        check(1 = 0, result("1 equals 0"));
+        check(1 = 1, result("1 equals 0"));
 
         
       ----------------------------------------------------------------------

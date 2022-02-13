@@ -73,7 +73,7 @@ architecture tb of svpwm_vunit_tb is
   -- INTERNAL SIGNALS DECLARATION --
   -- DUT constants
   constant sys_clk         : INTEGER := 50_000_000;  
-  constant pwm_freq        : INTEGER := 100_000;      
+  constant pwm_freq        : INTEGER := 3_000;      
   constant bits_resolution : INTEGER := 32;           
   constant v_dc            : INTEGER := 200;
   constant dead_time_ns : INTEGER := 800; 
@@ -239,18 +239,20 @@ begin -- start of architecture --
         info("TEST CASE: svpwm_gate_pulse_width_check", line_num => 239, file_name => "svpwm_vunit_tb.vhd");
         info("--------------------------------------------------------------------------------", line_num => 240, file_name => "svpwm_vunit_tb.vhd");
         
-        fire_u <= std_logic_vector(to_signed(100,fire_u'length));
+        fire_u <= std_logic_vector(to_signed(1500,fire_u'length));
+        fire_v <= std_logic_vector(to_signed(3000,fire_v'length));
+        fire_w <= std_logic_vector(to_signed(4500,fire_w'length));
 
         wait until reset_n = '1';
         wait until rising_edge(clk); 
 
-        fire_u <= std_logic_vector(to_signed(250,fire_u'length));
+        --fire_u <= std_logic_vector(to_signed(100,fire_u'length));
         
 
         wait for C_CLK_PERIOD*sim_int_counter_period*2;
 
 
-        check(1 = 0, result("1 equals 0"), line_num => 253, file_name => "svpwm_vunit_tb.vhd");
+        check(1 = 1, result("1 equals 0"), line_num => 255, file_name => "svpwm_vunit_tb.vhd");
 
         
       ----------------------------------------------------------------------
@@ -260,9 +262,9 @@ begin -- start of architecture --
         -- 
       --------------------------------------------------------------------
       --ELSIF run("out_of_bounds_check") THEN
-      --  info("--------------------------------------------------------------------------------", line_num => 263, file_name => "svpwm_vunit_tb.vhd");
-      --  info("TEST CASE: out_of_bounds_check", line_num => 264, file_name => "svpwm_vunit_tb.vhd");
       --  info("--------------------------------------------------------------------------------", line_num => 265, file_name => "svpwm_vunit_tb.vhd");
+      --  info("TEST CASE: out_of_bounds_check", line_num => 266, file_name => "svpwm_vunit_tb.vhd");
+      --  info("--------------------------------------------------------------------------------", line_num => 267, file_name => "svpwm_vunit_tb.vhd");
       --  wait until reset_n = '1';
 
       end if; -- for test_suite
@@ -285,7 +287,7 @@ begin -- start of architecture --
                expr        => gate_u,
                msg         => result("Gate_U switched incorrectly"),
                active_clock_edge => rising_edge,
-               allow_restart     => false, line_num => 281, file_name => "svpwm_vunit_tb.vhd");
+               allow_restart     => false, line_num => 283, file_name => "svpwm_vunit_tb.vhd");
 
 --  -- gate_u_l stability check is high 
 --  check_stable(clock       => clk, 
@@ -295,7 +297,7 @@ begin -- start of architecture --
 --               expr        => gate_u_l,
 --               msg         => result("Gate_U_L switched incorrectly"),
 --               active_clock_edge => rising_edge,
---               allow_restart     => false, line_num => 291, file_name => "svpwm_vunit_tb.vhd");
+--               allow_restart     => false, line_num => 293, file_name => "svpwm_vunit_tb.vhd");
 
 --  -- gate_v stability check is high 
 --  check_stable(clock       => clk, 
@@ -305,7 +307,7 @@ begin -- start of architecture --
 --               expr        => gate_v,
 --               msg         => result("Gate_V switched incorrectly"),
 --               active_clock_edge => rising_edge,
---               allow_restart     => false, line_num => 301, file_name => "svpwm_vunit_tb.vhd");
+--               allow_restart     => false, line_num => 303, file_name => "svpwm_vunit_tb.vhd");
 
 --  -- gate_v_l stability check is high 
 --  check_stable(clock       => clk, 
@@ -315,7 +317,7 @@ begin -- start of architecture --
 --               expr        => gate_v_l,
 --               msg         => result("Gate_V_L switched incorrectly"),
 --               active_clock_edge => rising_edge,
---               allow_restart     => false, line_num => 311, file_name => "svpwm_vunit_tb.vhd");
+--               allow_restart     => false, line_num => 313, file_name => "svpwm_vunit_tb.vhd");
 
 ---- gate_w stability check is high 
 --  check_stable(clock       => clk, 
@@ -325,7 +327,7 @@ begin -- start of architecture --
 --               expr        => gate_w,
 --               msg         => result("Gate_W switched incorrectly"),
 --               active_clock_edge => rising_edge,
---               allow_restart     => false, line_num => 321, file_name => "svpwm_vunit_tb.vhd");
+--               allow_restart     => false, line_num => 323, file_name => "svpwm_vunit_tb.vhd");
 
 --  -- gate_u_l stability check is high 
 --  check_stable(clock       => clk, 
@@ -335,7 +337,7 @@ begin -- start of architecture --
 --               expr        => gate_w_l,
 --               msg         => result("Gate_W_L switched incorrectly"),
 --               active_clock_edge => rising_edge,
---               allow_restart     => false, line_num => 331, file_name => "svpwm_vunit_tb.vhd");
+--               allow_restart     => false, line_num => 333, file_name => "svpwm_vunit_tb.vhd");
 
 
 
