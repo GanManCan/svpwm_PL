@@ -73,7 +73,7 @@ architecture tb of svpwm_vunit_tb is
   -- INTERNAL SIGNALS DECLARATION --
   -- DUT constants
   constant sys_clk         : INTEGER := 50_000_000;  
-  constant pwm_freq        : INTEGER := 3_000;      
+  constant pwm_freq        : INTEGER := 100_000;      
   constant bits_resolution : INTEGER := 32;           
   constant v_dc            : INTEGER := 200;
   constant dead_time_ns : INTEGER := 800; 
@@ -97,19 +97,23 @@ architecture tb of svpwm_vunit_tb is
   signal sim_int_counter_period :INTEGER := sys_clk/pwm_freq/2;
   signal sim_counter_dir : std_logic := '1'; -- 1 is up direction
 
-  signal check_enable         : std_logic := '1'; 
-  signal gate_u_start_event   : std_logic := '0';
-  signal gate_u_end_event     : std_logic := '0';
-  signal gate_u_l_start_event : std_logic := '0';
-  signal gate_u_l_end_event   : std_logic := '0';
-  signal gate_v_start_event   : std_logic := '0';
-  signal gate_v_end_event     : std_logic := '0';
-  signal gate_v_l_start_event : std_logic := '0';
-  signal gate_v_l_end_event   : std_logic := '0';
-  signal gate_w_start_event   : std_logic := '0';
-  signal gate_w_end_event     : std_logic := '0';
-  signal gate_w_l_start_event : std_logic := '0';
-  signal gate_w_l_end_event   : std_logic := '0';
+  -- Signals to read files
+  file file_vectors : text; 
+
+  -- Check stable signals
+  --signal check_enable         : std_logic := '1'; 
+  --signal gate_u_start_event   : std_logic := '0';
+  --signal gate_u_end_event     : std_logic := '0';
+  --signal gate_u_l_start_event : std_logic := '0';
+  --signal gate_u_l_end_event   : std_logic := '0';
+  --signal gate_v_start_event   : std_logic := '0';
+  --signal gate_v_end_event     : std_logic := '0';
+  --signal gate_v_l_start_event : std_logic := '0';
+  --signal gate_v_l_end_event   : std_logic := '0';
+  --signal gate_w_start_event   : std_logic := '0';
+  --signal gate_w_end_event     : std_logic := '0';
+  --signal gate_w_l_start_event : std_logic := '0';
+  --signal gate_w_l_end_event   : std_logic := '0';
 
 
   -- Spy Signals
@@ -161,6 +165,14 @@ begin -- start of architecture --
     ------------------------------------------------------------------------
     -- test_runner variables 
     ------------------------------------------------------------------------
+    variable v_ILINE     : line;
+    variable v_OLINE     : line;
+    variable read_ftg_u, read_ftg_v, read_ftg_w : integer;
+    variable read_lock_ftg_u, read_lock_ftg_v, read_lock_ftg_w : integer;
+    variable read_gate_u, read_gate_u_l : integer; 
+    variable read_gate_v, read_gate_v_l : integer; 
+    variable read_gate_w, read_gate_w_l : integer; 
+    variable v_SPACE     : character;
 
   begin
     -- setup VUnit
@@ -210,7 +222,7 @@ begin -- start of architecture --
 
           if(sim_counter_dir = '1') then
             sim_counter <= sim_counter + 1;
-            if(sim_counter = (sim_int_counter_period-1)) then
+            if(sim_counter = (sim_int_counter_period-2)) then
               sim_counter_dir <= '0';
             end if; -- if(sim_counter = sim_int_counter_period)
 
@@ -230,7 +242,9 @@ begin -- start of architecture --
 
       ----------------------------------------------------------------------
       -- TEST CASE DESCRIPTION:
-      -- 
+      --   Compare gate to test txt file
+      --   Checks each counter/cycle
+      --   Also checks that values are locked in a the correct time
       -- Expected Result:
         -- 
       --------------------------------------------------------------------
@@ -239,17 +253,51 @@ begin -- start of architecture --
         info("TEST CASE: svpwm_gate_pulse_width_check");
         info("--------------------------------------------------------------------------------");
         
-        fire_u <= std_logic_vector(to_signed(1500,fire_u'length));
-        fire_v <= std_logic_vector(to_signed(3000,fire_v'length));
-        fire_w <= std_logic_vector(to_signed(4500,fire_w'length));
+        file_open(file_VECTORS, "C:\Users\mgann\Xilinix_Projects\svpwm_PL\vunit_tests\python\svpwm_test_cases.txt",  read_mode);
+
+        -- read in first line 
+        readline(file_VECTORS, v_ILINE);
+        read(v_ILINE, read_ftg_u);
+        read(v_ILINE, v_SPACE);   -- read in the space character
+        read(v_ILINE, read_lock_ftg_u);
+        read(v_ILINE, v_SPACE);   
+        read(v_ILINE, read_gate_u);
+        read(v_ILINE, v_SPACE);   
+        read(v_ILINE, read_gate_u_l);
+        read(v_ILINE, v_SPACE);   
+        read(v_ILINE, read_ftg_v);
+        read(v_ILINE, v_SPACE);   -- read in the space character
+        read(v_ILINE, read_lock_ftg_v);
+        read(v_ILINE, v_SPACE);   
+        read(v_ILINE, read_gate_v);
+        read(v_ILINE, v_SPACE);   
+        read(v_ILINE, read_gate_v_l);
+        read(v_ILINE, v_SPACE); 
+        read(v_ILINE, read_ftg_w);
+        read(v_ILINE, v_SPACE);   -- read in the space character
+        read(v_ILINE, read_lock_ftg_w);
+        read(v_ILINE, v_SPACE);   
+        read(v_ILINE, read_gate_w);
+        read(v_ILINE, v_SPACE);   
+        read(v_ILINE, read_gate_w_l);
+        read(v_ILINE, v_SPACE); 
+
+        fire_u <= std_logic_vector(to_signed(read_ftg_u, fire_u'length));
+        fire_v <= std_logic_vector(to_signed(read_ftg_v, fire_v'length));
+        fire_w <= std_logic_vector(to_signed(read_ftg_w, fire_w'length));
 
         wait until reset_n = '1';
         wait until rising_edge(clk); 
+        wait for 1 ps; 
+        --fire_u <= std_logic_vector(to_signed(-250,fire_u'length));
+        --fire_v <= std_logic_vector(to_signed(0,fire_v'length));
+        --fire_w <= std_logic_vector(to_signed(5000,fire_w'length));
 
-        --fire_u <= std_logic_vector(to_signed(100,fire_u'length));
         
 
-        wait for C_CLK_PERIOD*sim_int_counter_period*2;
+        
+
+        wait for C_CLK_PERIOD*sim_int_counter_period*4;
 
 
         check(1 = 1, result("1 equals 0"));
@@ -280,14 +328,14 @@ begin -- start of architecture --
   ------------------------------------------------------------------------------
 
   -- gate_u stability check is high 
-  check_stable(clock       => clk, 
-               en          => check_enable,
-               start_event => gate_u_start_event,
-               end_event   => gate_u_end_event,
-               expr        => gate_u,
-               msg         => result("Gate_U switched incorrectly"),
-               active_clock_edge => rising_edge,
-               allow_restart     => false);
+  --check_stable(clock       => clk, 
+  --             en          => check_enable,
+  --             start_event => gate_u_start_event,
+  --             end_event   => gate_u_end_event,
+  --             expr        => gate_u,
+  --             msg         => result("Gate_U switched incorrectly"),
+  --             active_clock_edge => rising_edge,
+  --             allow_restart     => false);
 
 --  -- gate_u_l stability check is high 
 --  check_stable(clock       => clk, 

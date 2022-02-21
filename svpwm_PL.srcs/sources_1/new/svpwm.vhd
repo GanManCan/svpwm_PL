@@ -298,11 +298,6 @@ begin
 
 	   	end if; --if(dead_time_flag_w = '1')
 	
-
-
-
-
-
 	  end if; --if(reset_n = '0')	
   end process; --process(clk,reset_n)	
 
