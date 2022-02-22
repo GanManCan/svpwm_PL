@@ -59,7 +59,7 @@ architecture rtl of svpwm is
   -- CONSTANT DECLARATION
   CONSTANT int_t0    : INTEGER   := sys_clk/pwm_freq/2; -- Period = number of clocks in SVPWM cycle
                                                         -- Note 2 SVPWM cycles per switching cycle
-  CONSTANT dead_time_compare  	: INTEGER := sys_clk/1000/1000*dead_time_ns/1000;
+  CONSTANT dead_time_compare  	: INTEGER := sys_clk/1000/1000*dead_time_ns/1000 ;
   CONSTANT dead_time_cnt  	: INTEGER := sys_clk/1000/1000*dead_time_ns/1000;
   CONSTANT dead_time_cnt_2  : INTEGER := dead_time_cnt/2; 
 													
@@ -124,7 +124,9 @@ begin
 	  	  counter <= counter + 1; -- increment counter
 
 				-- If counter reaches period, change decrement, lock in fire value
-				if(counter >= int_t0-1) then
+				-- Counter is 0 based so need to offset by 2 to account for 
+				-- 		0 and the delay to propagate the signal
+				if(counter >= int_t0-2) then
 		  		count_dir <= '0'; 
 		  		lock_fire_u <= fire_u; 
 		  		lock_fire_v <= fire_v;

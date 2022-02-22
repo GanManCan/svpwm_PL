@@ -100,6 +100,9 @@ architecture tb of svpwm_vunit_tb is
   -- Signals to read files
   file file_vectors : text; 
 
+  -- Debug Read signals
+  signal temp_read_gate_u : std_logic; 
+  signal temp_read_gate_u_l : std_logic;
   -- Check stable signals
   --signal check_enable         : std_logic := '1'; 
   --signal gate_u_start_event   : std_logic := '0';
@@ -119,6 +122,20 @@ architecture tb of svpwm_vunit_tb is
   -- Spy Signals
   alias spy_counter is 
    <<signal .svpwm_tb_inst.counter : integer range -65533 to 65533 >>; 
+
+  alias spy_lock_fire_u is 
+   <<signal .svpwm_tb_inst.lock_fire_u : std_logic_vector(bits_resolution-1 downto 0) >>;
+  signal int_spy_lock_fire_u : integer;
+  signal slv_temp: std_logic_vector(bits_resolution-1 downto 0);
+
+  alias spy_lock_fire_v is 
+   <<signal .svpwm_tb_inst.lock_fire_v : std_logic_vector(bits_resolution-1 downto 0) >>;
+  alias spy_lock_fire_w is 
+   <<signal .svpwm_tb_inst.lock_fire_w : std_logic_vector(bits_resolution-1 downto 0) >>;
+
+
+
+  
   
 begin -- start of architecture -- 
   -------------------------------------------------------------------------- 
@@ -169,9 +186,10 @@ begin -- start of architecture --
     variable v_OLINE     : line;
     variable read_ftg_u, read_ftg_v, read_ftg_w : integer;
     variable read_lock_ftg_u, read_lock_ftg_v, read_lock_ftg_w : integer;
-    variable read_gate_u, read_gate_u_l : integer; 
-    variable read_gate_v, read_gate_v_l : integer; 
-    variable read_gate_w, read_gate_w_l : integer; 
+    variable read_gate_u, read_gate_u_l : std_logic; 
+    variable read_gate_v, read_gate_v_l : std_logic; 
+    variable read_gate_w, read_gate_w_l : std_logic; 
+    variable read_counter : integer; 
     variable v_SPACE     : character;
 
   begin
@@ -281,27 +299,84 @@ begin -- start of architecture --
         read(v_ILINE, v_SPACE);   
         read(v_ILINE, read_gate_w_l);
         read(v_ILINE, v_SPACE); 
+        read(v_ILINE, read_counter);
 
         fire_u <= std_logic_vector(to_signed(read_ftg_u, fire_u'length));
         fire_v <= std_logic_vector(to_signed(read_ftg_v, fire_v'length));
         fire_w <= std_logic_vector(to_signed(read_ftg_w, fire_w'length));
 
-        wait until reset_n = '1';
-        wait until rising_edge(clk); 
+        wait until rising_edge(clk);
         wait for 1 ps; 
-        --fire_u <= std_logic_vector(to_signed(-250,fire_u'length));
-        --fire_v <= std_logic_vector(to_signed(0,fire_v'length));
-        --fire_w <= std_logic_vector(to_signed(5000,fire_w'length));
+        check_equal(spy_counter, read_counter, result("Check spy_counter equal read_counter"));
 
+        wait until reset_n = '1';
+        wait for 1 ps; 
+
+        while not endfile(file_VECTORS) loop
+          readline(file_VECTORS, v_ILINE);
+          read(v_ILINE, read_ftg_u);
+          read(v_ILINE, v_SPACE);   -- read in the space character
+          read(v_ILINE, read_lock_ftg_u);
+          read(v_ILINE, v_SPACE);   
+          read(v_ILINE, read_gate_u);
+          read(v_ILINE, v_SPACE);   
+          read(v_ILINE, read_gate_u_l);
+          read(v_ILINE, v_SPACE);   
+          read(v_ILINE, read_ftg_v);
+          read(v_ILINE, v_SPACE);   -- read in the space character
+          read(v_ILINE, read_lock_ftg_v);
+          read(v_ILINE, v_SPACE);   
+          read(v_ILINE, read_gate_v);
+          read(v_ILINE, v_SPACE);   
+          read(v_ILINE, read_gate_v_l);
+          read(v_ILINE, v_SPACE); 
+          read(v_ILINE, read_ftg_w);
+          read(v_ILINE, v_SPACE);   -- read in the space character
+          read(v_ILINE, read_lock_ftg_w);
+          read(v_ILINE, v_SPACE);   
+          read(v_ILINE, read_gate_w);
+          read(v_ILINE, v_SPACE);   
+          read(v_ILINE, read_gate_w_l);
+          read(v_ILINE, v_SPACE); 
+          read(v_ILINE, read_counter);
+
+          temp_read_gate_u <= read_gate_u;
+          temp_read_gate_u_l <= read_gate_u_l;
+
+          wait for 1 ps;
+
+          check_equal(got=> gate_u, expected=> read_gate_u, 
+               msg=>result("Check gate_u to test file"));
+
+          check_equal(got=> gate_u_l, expected=> read_gate_u_l, 
+              msg=>result("Check gate_u_l to test file"));
+
+          check_equal(got=> gate_v, expected=> read_gate_v, 
+               msg=>result("Check gate_v to test file"));
+
+          check_equal(got=> gate_v_l, expected=> read_gate_v_l, 
+               msg=>result("Check gate_v_l to test file"));
+
+          check_equal(got=> gate_w, expected=> read_gate_w, 
+               msg=>result("Check gate_w value to test file"));
+
+          check_equal(got=> gate_w_l, expected=> read_gate_w_l, 
+               msg=>result("Check gate_w_l to test file"));
+
+          check_equal(got=>spy_counter, expected=>read_counter, 
+                msg=>result("Check spy_counter equal read_counter"));
+
+
+          wait until rising_edge(clk);
+          wait for 1 ps; 
+
+        end loop;
         
 
-        
-
-        wait for C_CLK_PERIOD*sim_int_counter_period*4;
+        --wait for C_CLK_PERIOD*sim_int_counter_period*4;
 
 
-        check(1 = 1, result("1 equals 0"));
-
+    
         
       ----------------------------------------------------------------------
       -- TEST CASE DESCRIPTION:
@@ -321,7 +396,6 @@ begin -- start of architecture --
     wait for 20 ns;
     test_runner_cleanup(runner); -- end of simulation 
   end process test_runner; 
-
 
   --------------------------------------------------------------------------------
   -- Gate signal stability checker

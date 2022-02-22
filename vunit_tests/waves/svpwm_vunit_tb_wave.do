@@ -5,6 +5,8 @@ quietly virtual signal -install /svpwm_vunit_tb { (context /svpwm_vunit_tb )(gat
 quietly virtual signal -install /svpwm_vunit_tb { (context /svpwm_vunit_tb )(gate_v & gate_v_l )} Gate_V_comb
 quietly virtual signal -install /svpwm_vunit_tb { (context /svpwm_vunit_tb )(gate_w & gate_w_l )} Gate_W_comb
 quietly virtual signal -install /svpwm_vunit_tb { (context /svpwm_vunit_tb )(gate_u & gate_u_l )} Gate_U_temp
+quietly virtual signal -install /svpwm_vunit_tb { (context /svpwm_vunit_tb )(gate_u & temp_read_gate_u )} GateU
+quietly virtual signal -install /svpwm_vunit_tb { (context /svpwm_vunit_tb )(gate_u_l & temp_read_gate_u_l )} GateUL
 quietly WaveActivateNextPane {} 0
 add wave -noupdate /svpwm_vunit_tb/clk
 add wave -noupdate -format Literal /svpwm_vunit_tb/reset_n
@@ -23,6 +25,8 @@ add wave -noupdate -expand -group {Gate Signals High} /svpwm_vunit_tb/gate_v
 add wave -noupdate -expand -group {Gate Signals High} /svpwm_vunit_tb/gate_w
 add wave -noupdate -expand -group {Counter Signals} /svpwm_vunit_tb/spy_counter
 add wave -noupdate -expand -group {Counter Signals} /svpwm_vunit_tb/sim_counter
+add wave -noupdate /svpwm_vunit_tb/GateU
+add wave -noupdate /svpwm_vunit_tb/GateUL
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {82705 ps} 0}
 quietly wave cursor active 1
@@ -40,4 +44,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits us
 update
-WaveRestoreZoom {0 ps} {407501 ps}
+WaveRestoreZoom {2482877 ps} {2890378 ps}
