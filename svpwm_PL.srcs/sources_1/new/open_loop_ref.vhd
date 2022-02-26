@@ -43,13 +43,13 @@ use IEEE.FIXED_PKG.ALL;
 entity open_loop_ref is
 	generic(
 		sys_clk		: integer := 50_000_000;
-		freq_bits	: integer := 7
+		freq_bits	: integer := 8
 	);
     port(
 		clk 				: IN std_logic;
 		reset_n				: IN std_logic;
 		en					: IN std_logic;
-		freq				: IN std_logic_vector(freq_bits downto 0); 
+		freq				: IN std_logic_vector(freq_bits-1 downto 0); 
 		fp_v_alpha_open		: OUT sfixed (20 downto -11);  
 		fp_v_beta_open		: OUT sfixed (20 downto -11)
 	);

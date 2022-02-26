@@ -340,6 +340,10 @@ begin -- start of architecture --
           read(v_ILINE, v_SPACE); 
           read(v_ILINE, read_counter);
 
+          fire_u <= std_logic_vector(to_signed(read_ftg_u, fire_u'length));
+          fire_v <= std_logic_vector(to_signed(read_ftg_v, fire_v'length));
+          fire_w <= std_logic_vector(to_signed(read_ftg_w, fire_w'length));
+
           temp_read_gate_u <= read_gate_u;
           temp_read_gate_u_l <= read_gate_u_l;
 

@@ -126,7 +126,7 @@ begin
 				-- If counter reaches period, change decrement, lock in fire value
 				-- Counter is 0 based so need to offset by 2 to account for 
 				-- 		0 and the delay to propagate the signal
-				if(counter >= int_t0-2) then
+				if(counter >= int_t0 - 2) then
 		  		count_dir <= '0'; 
 		  		lock_fire_u <= fire_u; 
 		  		lock_fire_v <= fire_v;
