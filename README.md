@@ -14,8 +14,11 @@ SVPWM_PL is still under initial development and does not have a working release.
 
 Open-loop control for three-phase motor controller using a Zynq-7000 based System On Chip.  
 
-This project on contains the programmable-logic for the FPGA portion of the Zynq.
+For now, this project in only implemented in the Zynq programmable-logic using an open-loop controller.  In the future, high level software control will be added.  A high-level diagram of the programmable-logic architecture can be seen below: 
 
+<p align="left">
+  <img src = "https://github.com/GanManCan/svpwm_PL/blob/main/docs/Diagrams/system_diagram.drawio.svg" width=800>
+</p>
 
 ## Features
 
