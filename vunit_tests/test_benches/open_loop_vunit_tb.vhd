@@ -76,9 +76,9 @@ architecture tb of open_loop_vunit_tb is
   constant freq_bits  : INTEGER := 8;      
 
   -- DUT interface
-  signal clk             : std_logic;
-  signal reset_n         : std_logic;
-  signal en              : std_logic;
+  signal clk             : std_logic := '0';
+  signal reset_n         : std_logic := '0';
+  signal en              : std_logic := '1';
   signal freq            : std_logic_vector(freq_bits downto 0);
   signal fp_v_alpha_open : sfixed (20 downto -11);
   signal fp_v_beta_open  : sfixed (20 downto -11);  
