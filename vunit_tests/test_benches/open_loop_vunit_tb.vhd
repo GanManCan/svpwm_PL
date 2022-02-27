@@ -79,7 +79,7 @@ architecture tb of open_loop_vunit_tb is
   signal clk             : std_logic := '0';
   signal reset_n         : std_logic := '0';
   signal en              : std_logic := '1';
-  signal freq            : std_logic_vector(freq_bits downto 0);
+  signal freq            : std_logic_vector(freq_bits-1 downto 0);
   signal fp_v_alpha_open : sfixed (20 downto -11);
   signal fp_v_beta_open  : sfixed (20 downto -11);  
  
@@ -142,14 +142,32 @@ begin -- start of architecture --
       ----------------------------------------------------------------------
       if run("open_loop_check_reset_values") then
         info("--------------------------------------------------------------------------------");
-        info("TEST CASE: svpwm_check_reset_values");
+        info("TEST CASE: open_loop_check_reset_values");
         info("--------------------------------------------------------------------------------");
         wait until rising_edge(clk);
         wait until rising_edge(clk);
         wait for 1 ps;
-        
+
+        check(fp_v_alpha_open = to_sfixed(0.0,20,-11), "Check v_alpha reset value");
+        check(fp_v_beta_open = to_sfixed(0.0,20,-11), "Check v_beta reset value");
         
         info("==== TEST CASE FINISHED =====");  
+
+      ----------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+        -- Check that out of bounds values go to default state
+      -- Expected Result:
+        -- 
+      --------------------------------------------------------------------
+      ELSIF run("open_loop_check_states") THEN
+        info("--------------------------------------------------------------------------------");
+        info("TEST CASE: open_loop_check_states");
+        info("--------------------------------------------------------------------------------");
+        wait until reset_n = '1';
+
+
+
+        info("==== TEST CASE FINISHED ====="); 
 
 
       ----------------------------------------------------------------------

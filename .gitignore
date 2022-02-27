@@ -8,7 +8,7 @@ svpwm_PL.sim/
 modelsim/
 .Xil/
 vunit_tests/vunit_out
-/test_benches
+
 
 
 # Xilinix Files #

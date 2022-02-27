@@ -36,6 +36,7 @@ The [diagrams folder](https://github.com/GanManCan/svpwm_PL/tree/main/docs/Diagr
 ## Version Information 
 * Xilinx Vivado 2020.1
 * Xilinx Vitis 2020.1
+* Questa 2020.1 - Intel FPGA Starter Edition
 
 ## Build Process
 
@@ -47,7 +48,7 @@ To build the Xilinx Project:
 
 To run the testbenches: 
 
-- Install [ModelSim v2]
+- Install [Questa 2020.1 - Intel FPGA Starter Edition]
 - Install [VUnit](https://vunit.github.io/index.html#), an open source VHDL compatible unit testing frame work.  Follow this [guide](https://vhdlwhiz.com/getting-started-with-vunit/) for additional installation and usage instructions. 
 
 

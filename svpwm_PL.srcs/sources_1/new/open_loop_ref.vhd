@@ -104,6 +104,8 @@ begin
 			int_saved_freq <= 0; -- Set to 60 Hz default value. 
 			int_rtc_clk_counter <= 0; -- Reset RTC Counter
 			int_rtc_clk_setpoint <= 0; 
+			fp_v_alpha_open <= (OTHERS => '0');
+			fp_v_beta_open <= (OTHERS => '0');
 			--int_rtc_clk_setpoint <= sys_clk/60; -- Set RTC counter to default 60 Hz
 		
 		elsif(clk'event and clk = '1') then
