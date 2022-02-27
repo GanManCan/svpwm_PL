@@ -17,7 +17,7 @@ type t_sin_table is array(0 to 250) of integer range 0 to 65535;
 constant TABLE_SIZE	: integer range 0 to 255 := 251; 
 
 -- Signal Declaration
-signal int_i_addr_temp 	: integer := 0; 
+
 
 -- Sine Lookup Table with 251 entires
 -- Lookup table represents sine 0 to pi/2
@@ -42,41 +42,41 @@ begin
 --------------------------------------------------------------------
 
 p_table : process(i_clk)
+	-- p_table variables
+	variable int_i_addr_temp 	: integer := 0; 
+
 begin
   if(rising_edge(i_clk)) then
-  
-    --- The Current implitation does not calculate the temp integer on the right clock cyle
-	
-	
-	-- Map the output 0 to pi/2 to entire sine wave 
-	-- 0 to pi/2 output 
-	if(to_integer(unsigned(i_addr)) >= 0 and to_integer(unsigned(i_addr)) < (TABLE_SIZE)) then
-		-- output 
-		-- if i_add is in range output data		
-		o_data  <= std_logic_vector(to_signed(C_SIN_TABLE(to_integer(unsigned(i_addr))),o_data'length));
-	
-	-- pi/2 to pi output 
-	elsif((to_integer(unsigned(i_addr)) >= TABLE_SIZE) and (to_integer(unsigned(i_addr)) < 2*TABLE_SIZE)) then
+  	
+		-- Map the output 0 to pi/2 to entire sine wave 
+		-- 0 to pi/2 output 
+		if(to_integer(unsigned(i_addr)) >= 0 and to_integer(unsigned(i_addr)) < (TABLE_SIZE)) then
+			-- output 
+			-- if i_add is in range output data		
+			o_data  <= std_logic_vector(to_signed(C_SIN_TABLE(to_integer(unsigned(i_addr))),o_data'length));
 		
-		-- calclate MOD value to keep in range of 0 to pi/2
-		int_i_addr_temp <= 2*TABLE_SIZE - to_integer(unsigned(i_addr))-1; 
-		o_data <= std_logic_vector(to_signed(C_SIN_TABLE(int_i_addr_temp), o_data'length)); 
-	
-	-- pi to 3*pi/2
-	elsif((to_integer(unsigned(i_addr)) >= 2*TABLE_SIZE) and (to_integer(unsigned(i_addr)) < 3*TABLE_SIZE)) then
+		-- pi/2 to pi output 
+		elsif((to_integer(unsigned(i_addr)) >= TABLE_SIZE) and (to_integer(unsigned(i_addr)) < 2*TABLE_SIZE-1)) then
+			
+			-- calclate MOD value to keep in range of 0 to pi/2
+			int_i_addr_temp := 2*TABLE_SIZE - to_integer(unsigned(i_addr))-2; 
+			o_data <= std_logic_vector(to_signed(C_SIN_TABLE(int_i_addr_temp), o_data'length)); 
 		
-		int_i_addr_temp <= to_integer(unsigned(i_addr)) - 3*TABLE_SIZE-1; 
-		o_data <= std_logic_vector(to_signed(-1*C_SIN_TABLE(int_i_addr_temp), o_data'length)); 
-	
-	-- 3*pi/2 to 2*p
-	elsif((to_integer(unsigned(i_addr)) >= 3*TABLE_SIZE) and (to_integer(unsigned(i_addr)) < 4*TABLE_SIZE)) then
-		int_i_addr_temp <= - 4*TABLE_SIZE-to_integer(unsigned(i_addr))-1; 
-		o_data <= std_logic_vector(to_signed(-1*C_SIN_TABLE(int_i_addr_temp), o_data'length));
-	else
-		-- Add input checking to i_addr value to hard coded sine table size
-		-- Default output 0 
-		o_data <= (others => '0'); 
-	end if; -- range check 
+		-- pi to 3*pi/2
+		elsif((to_integer(unsigned(i_addr)) >= 2*TABLE_SIZE-1) and (to_integer(unsigned(i_addr)) < 3*TABLE_SIZE-2)) then
+			
+			int_i_addr_temp := to_integer(unsigned(i_addr)) - 2*TABLE_SIZE+2; 
+			o_data <= std_logic_vector(to_signed(-1*C_SIN_TABLE(int_i_addr_temp), o_data'length)); 
+		
+		-- 3*pi/2 to 2*p
+		elsif((to_integer(unsigned(i_addr)) >= 3*TABLE_SIZE-2) and (to_integer(unsigned(i_addr)) < 4*TABLE_SIZE-4)) then
+			int_i_addr_temp := 4*TABLE_SIZE-to_integer(unsigned(i_addr))-4; 
+			o_data <= std_logic_vector(to_signed(-1*C_SIN_TABLE(int_i_addr_temp), o_data'length));
+		else
+			-- Add input checking to i_addr value to hard coded sine table size
+			-- Default output 0 
+			o_data <= (others => '0'); 
+		end if; -- range check 
   end if; --rising_edge(i_clk)
 end process p_table;
 
