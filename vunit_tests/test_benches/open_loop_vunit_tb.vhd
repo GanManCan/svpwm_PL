@@ -89,6 +89,17 @@ architecture tb of open_loop_vunit_tb is
   signal sim_counter_dir : std_logic := '1'; -- 1 is up direction
 
   -- Spy Signals  
+  type STATE_TYPE is (IDLE, CALC_FREQ_COUNTER, V_ALPHA_LOOKUP, V_BETA_LOOKUP);
+
+  alias spy_state is
+    <<signal .open_loop_ref_inst.state : STATE_TYPE >>;
+
+  alias spy_rtc_counter is
+    <<signal .open_loop_ref_inst.int_rtc_clk_counter : INTEGER range 0 to 16777215 >>;
+
+  alias spy_rtc_setpoint is
+    <<signal .open_loop_ref_inst.int_rtc_clk_setpoint : INTEGER >>;
+
   
 begin -- start of architecture -- 
   -------------------------------------------------------------------------- 
@@ -144,12 +155,14 @@ begin -- start of architecture --
         info("--------------------------------------------------------------------------------");
         info("TEST CASE: open_loop_check_reset_values");
         info("--------------------------------------------------------------------------------");
+
         wait until rising_edge(clk);
         wait until rising_edge(clk);
         wait for 1 ps;
 
         check(fp_v_alpha_open = to_sfixed(0.0,20,-11), "Check v_alpha reset value");
         check(fp_v_beta_open = to_sfixed(0.0,20,-11), "Check v_beta reset value");
+        check(spy_state = IDLE, "Check reset state");
         
         info("==== TEST CASE FINISHED =====");  
 
@@ -163,7 +176,39 @@ begin -- start of architecture --
         info("--------------------------------------------------------------------------------");
         info("TEST CASE: open_loop_check_states");
         info("--------------------------------------------------------------------------------");
+        
+        freq <= std_logic_vector(to_unsigned(100, freq'length));
+
         wait until reset_n = '1';
+        wait for 1 ps;
+
+        --check(spy_state = CALC_FREQ_COUNTER, "Check state enters CALC_FREQ_COUNTER 1");
+
+        wait until rising_edge(clk);
+        wait for 1 ps;
+
+        --check(spy_state = IDLE, "Check state enters IDLE"); 
+
+        wait until rising_edge(clk); 
+        wait for 1 ps; 
+        
+        --check(spy_state = CALC_FREQ_COUNTER, "Check state enters CALC_FREQ_COUNTER 2");
+         
+
+        wait until rising_edge(clk);
+        wait until rising_edge(clk);
+
+        for i in 0 to 1_000_000   loop
+          wait until rising_edge(clk);   
+        end loop ;        
+        wait for 1 ps;
+
+   
+
+
+
+
+
 
 
 

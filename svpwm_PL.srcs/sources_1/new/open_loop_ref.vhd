@@ -72,13 +72,14 @@ architecture rtl of open_loop_ref is
 	
 	-- Constant Declarations
 	constant TABLE_SIZE_SIN : integer range 0 to 255 := 251;  -- Table size defined in sine_lookup for 1/4 wave
+	constant TABLE_SIZE_FULL: integer range 0 to 1024 := 1000; 
 	constant SIN_SCALE_FACTOR : sfixed(20 downto -11) := to_sfixed(65535, 20, -11);
 	
 	
 	-- Signal Declarations
 	signal int_saved_freq		: integer; --range 0 to 2**(freq_bits); 
 	signal int_rtc_clk_counter	: integer range 0 to 16777215 := 0;
-	signal int_rtc_clk_setpoint : integer := sys_clk/60;  -- default to 60 Hz setpoitn. 
+	signal int_rtc_clk_setpoint : integer := sys_clk/60/TABLE_SIZE_FULL;  -- default to 60 Hz setpoitn. 
 	signal int_v_alpha_counter	: integer range 0 to TABLE_SIZE_SIN*4 := 0; 
 	signal int_v_beta_counter   : integer range 0 to TABLE_SIZE_SIN*4 := TABLE_SIZE_SIN;
 	signal temp_fp_v_alpha	: sfixed(20 downto -11); 
@@ -101,11 +102,13 @@ begin
 	begin
 		if(reset_n = '0') then 
 			-- Asynchronious reset
-			int_saved_freq <= 0; -- Set to 60 Hz default value. 
+			int_saved_freq <= 1000; -- Set to 60 Hz default value. 
 			int_rtc_clk_counter <= 0; -- Reset RTC Counter
 			int_rtc_clk_setpoint <= 0; 
 			fp_v_alpha_open <= (OTHERS => '0');
 			fp_v_beta_open <= (OTHERS => '0');
+
+			state <= IDLE;
 			--int_rtc_clk_setpoint <= sys_clk/60; -- Set RTC counter to default 60 Hz
 		
 		elsif(clk'event and clk = '1') then
@@ -122,7 +125,7 @@ begin
 				when CALC_FREQ_COUNTER =>
 					-- Calculate new frequency counter setpoint
 					-- Move to Idle state
-					int_rtc_clk_setpoint <= sys_clk/int_saved_freq;
+					int_rtc_clk_setpoint <= sys_clk/int_saved_freq/TABLE_SIZE_FULL;
 					state <= IDLE;
 					
 				when IDLE =>	
@@ -150,12 +153,12 @@ begin
 						int_v_beta_counter <= int_v_beta_counter + 1;
 						
 						-- Range check pointer counters
-						if(int_v_alpha_counter >= (TABLE_SIZE_SIN*4-1)) then
+						if(int_v_alpha_counter >= (TABLE_SIZE_SIN*4-4)) then
 							int_v_alpha_counter <= 0; 
 						end if; --if(int_v_alpha_counter ...) 
 						
-						if(int_v_alpha_counter >= (TABLE_SIZE_SIN*4-1)) then
-							int_v_alpha_counter <= 0; 
+						if(int_v_beta_counter >= (TABLE_SIZE_SIN*4-4)) then
+							int_v_beta_counter <= 0; 
 						end if; --if(int_v_alpha_counter ...) 
 						
 					end if; --if (to_integer(signed(freq)) /= int_saved_freq)
