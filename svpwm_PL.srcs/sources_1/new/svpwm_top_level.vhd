@@ -39,7 +39,8 @@ end svpwm_top_level;
 
 
 architecture rtl of svpwm_top_level is
-  --  open loop component descripor 
+  
+  -- --  open loop component descripor 
 	component open_loop_ref is
 		generic (
 			sys_clk   : integer := 50_000_000;
@@ -101,6 +102,16 @@ architecture rtl of svpwm_top_level is
 	end component svpwm;  
   
   ------------------------------------------------------------------------------
+  -- Constant Declaration
+  ------------------------------------------------------------------------------
+  constant freq_bits 				: integer := 8; 
+  constant sys_clk					: integer := 50_000_000;
+  constant dead_time_ns 		: integer := 10;
+  constant v_dc							: integer := 200; 
+  constant bits_resolution 	: integer := 32; 
+  constant pwm_freq 				: integer := 3_000; 
+
+  ------------------------------------------------------------------------------
 	-- Signal Declarations
 	------------------------------------------------------------------------------
 
@@ -111,9 +122,9 @@ architecture rtl of svpwm_top_level is
 	signal fp_v_beta_open  : sfixed (20 downto -11);	
 
 	-- Open_loop_ref signals
-	signal fire_time_start : std_logic;
 	signal fp_v_alpha      : sfixed(20 downto -11);
 	signal fp_v_beta       : sfixed(20 downto -11);
+	signal fire_time_start : std_logic := '1';
 	signal fire_time_done  : std_logic;
 	signal fire_u          : std_logic_vector(bits_resolution-1 downto 0);
 	signal fire_v          : std_logic_vector(bits_resolution-1 downto 0);
@@ -129,6 +140,8 @@ architecture rtl of svpwm_top_level is
 --------------------------------------------------------------------------------
 begin
 
+	freq <= std_logic_vector(to_unsigned(60, freq'length));
+
 	open_loop_ref_1 : entity work.open_loop_ref
 		generic map (
 			sys_clk   => sys_clk,
@@ -139,8 +152,8 @@ begin
 			reset_n         => reset_n,
 			en              => en,
 			freq            => freq,
-			fp_v_alpha_open => fp_v_alpha_open,
-			fp_v_beta_open  => fp_v_beta_open
+			fp_v_alpha_open => fp_v_alpha,
+			fp_v_beta_open  => fp_v_beta
 		);  
 
 	firing_time_generator_1 : entity work.firing_time_generator

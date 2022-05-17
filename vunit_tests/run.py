@@ -24,6 +24,7 @@ design_lib.add_source_files([DUT_PATH / "firing_time_generator.vhd"])
 design_lib.add_source_files([DUT_PATH / "svpwm.vhd"])
 design_lib.add_source_files([DUT_PATH / "open_loop_ref.vhd"])
 design_lib.add_source_files([DUT_PATH / "sine_lookup.vhd"])
+design_lib.add_source_files([DUT_PATH / "svpwm_top_level.vhd"])
 
 # create testbench library
 testbench_lib = VU.add_library("testbench_lib")
