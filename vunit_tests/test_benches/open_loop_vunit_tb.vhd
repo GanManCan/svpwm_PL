@@ -82,6 +82,7 @@ architecture tb of open_loop_vunit_tb is
   signal freq            : std_logic_vector(freq_bits-1 downto 0);
   signal fp_v_alpha_open : sfixed (20 downto -11);
   signal fp_v_beta_open  : sfixed (20 downto -11);  
+  signal open_loop_done : std_logic; 
  
   -- Simulation Signals --
   signal sim_counter : INTEGER := 0; 
@@ -92,13 +93,13 @@ architecture tb of open_loop_vunit_tb is
   type STATE_TYPE is (IDLE, CALC_FREQ_COUNTER, V_ALPHA_LOOKUP, V_BETA_LOOKUP);
 
   alias spy_state is
-    <<signal .open_loop_ref_inst.state : STATE_TYPE >>;
+    <<signal.open_loop_ref_inst.state : STATE_TYPE >>;
 
   alias spy_rtc_counter is
-    <<signal .open_loop_ref_inst.int_rtc_clk_counter : INTEGER range 0 to 16777215 >>;
+    <<signal.open_loop_ref_inst.int_rtc_clk_counter : INTEGER range 0 to 16777215 >>;
 
   alias spy_rtc_setpoint is
-    <<signal .open_loop_ref_inst.int_rtc_clk_setpoint : INTEGER >>;
+    <<signal.open_loop_ref_inst.int_rtc_clk_setpoint : INTEGER >>;
 
   
 begin -- start of architecture -- 
@@ -116,7 +117,8 @@ begin -- start of architecture --
       en              => en,
       freq            => freq,
       fp_v_alpha_open => fp_v_alpha_open,
-      fp_v_beta_open  => fp_v_beta_open
+      fp_v_beta_open  => fp_v_beta_open,
+      open_loop_done  => open_loop_done
     );  
 
 
@@ -182,37 +184,112 @@ begin -- start of architecture --
         wait until reset_n = '1';
         wait for 1 ps;
 
-        --check(spy_state = CALC_FREQ_COUNTER, "Check state enters CALC_FREQ_COUNTER 1");
+        check(spy_state = CALC_FREQ_COUNTER, "Check state enters CALC_FREQ_COUNTER");
 
         wait until rising_edge(clk);
         wait for 1 ps;
 
-        --check(spy_state = IDLE, "Check state enters IDLE"); 
+        check(spy_state = IDLE, "Check state enters IDLE"); 
 
         wait until rising_edge(clk); 
         wait for 1 ps; 
+
+        wait until (spy_state /= IDLE);
+        wait for 1 ps;
         
-        --check(spy_state = CALC_FREQ_COUNTER, "Check state enters CALC_FREQ_COUNTER 2");
+        check(spy_state = V_ALPHA_LOOKUP, "Check state enters V_ALPHA_LOOKUP");
+        
+        wait until rising_edge(clk); 
+        wait for 1 ps; 
+
+        check(spy_state = V_BETA_LOOKUP, "Check state enters V_BETA_LOOKUP");
+
+        wait until rising_edge(clk); 
+        wait for 1 ps;
+        check(spy_state = IDLE, "Check state enters IDLE"); 
+
+        wait until rising_edge(clk);
+        wait until rising_edge(clk);
+
+        info("==== TEST CASE FINISHED ====="); 
+
+
+      ----------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+        -- Check that the done flag is set/reset apprpiatly
+        -- Perfrom check over multiple loops 
+      -- Expected Result:
+        -- 
+      --------------------------------------------------------------------
+      ELSIF run("open_loop_check_done_flag") THEN
+        info("--------------------------------------------------------------------------------");
+        info("TEST CASE: open_loop_check_done_flag");
+        info("--------------------------------------------------------------------------------");
+        
+        freq <= std_logic_vector(to_unsigned(60, freq'length));
+
+        wait until reset_n = '1';
+        wait for 1 ps; 
+
+        for ii in 0 to 5 loop
+
+          wait until (spy_state = V_BETA_LOOKUP);
+          wait for 1 ps;
+          check(open_loop_done = '0', "Check done flag is 0");
+
+          wait until (spy_state = IDLE);
+          wait for 1 ps; 
+          check(open_loop_done = '1', "Check done flag is '1' for 1 state in IDLE");
+
+          wait until rising_edge(clk);
+          wait for 1 ps; 
+          check(open_loop_done = '0', "CHeck done flag is '0' after 1 clk in IDLE"); 
+        end loop; -- for ii in 0 to 5
          
 
         wait until rising_edge(clk);
         wait until rising_edge(clk);
 
-        for i in 0 to 1_000_000   loop
-          wait until rising_edge(clk);   
-        end loop ;        
-        wait for 1 ps;
-
-   
-
-
-
-
-
-
-
-
         info("==== TEST CASE FINISHED ====="); 
+        
+      ----------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+        -- Check that out of bounds values go to default state
+      -- Expected Result:
+        -- 
+      --------------------------------------------------------------------
+      --ELSIF run("open_loop_debug") THEN
+      --  info("--------------------------------------------------------------------------------");
+      --  info("TEST CASE: open_loop_debug");
+      --  info("--------------------------------------------------------------------------------");
+        
+      --  freq <= std_logic_vector(to_unsigned(60, freq'length));
+
+      --  wait until reset_n = '1';
+      --  wait for 1 ps;
+
+      --  --check(spy_state = CALC_FREQ_COUNTER, "Check state enters CALC_FREQ_COUNTER 1");
+
+      --  wait until rising_edge(clk);
+      --  wait for 1 ps;
+
+      --  --check(spy_state = IDLE, "Check state enters IDLE"); 
+
+      --  wait until rising_edge(clk); 
+      --  wait for 1 ps; 
+        
+      --  --check(spy_state = CALC_FREQ_COUNTER, "Check state enters CALC_FREQ_COUNTER 2");
+         
+
+      --  wait until rising_edge(clk);
+      --  wait until rising_edge(clk);
+
+      --  for i in 0 to 1_000_000   loop
+      --    wait until rising_edge(clk);   
+      --  end loop ;        
+      --  wait for 1 ps;
+
+      --  info("==== TEST CASE FINISHED ====="); 
 
 
       ----------------------------------------------------------------------

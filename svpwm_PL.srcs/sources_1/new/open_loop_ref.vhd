@@ -51,7 +51,8 @@ entity open_loop_ref is
 		en					: IN std_logic;
 		freq				: IN std_logic_vector(freq_bits-1 downto 0); 
 		fp_v_alpha_open		: OUT sfixed (20 downto -11);  
-		fp_v_beta_open		: OUT sfixed (20 downto -11)
+		fp_v_beta_open		: OUT sfixed (20 downto -11);
+		open_loop_done		: out std_logic
 	);
 end open_loop_ref;
 
@@ -107,6 +108,7 @@ begin
 			int_rtc_clk_setpoint <= 0; 
 			fp_v_alpha_open <= (OTHERS => '0');
 			fp_v_beta_open <= (OTHERS => '0');
+			open_loop_done <= '0';
 
 			state <= IDLE;
 			--int_rtc_clk_setpoint <= sys_clk/60; -- Set RTC counter to default 60 Hz
@@ -129,6 +131,10 @@ begin
 					state <= IDLE;
 					
 				when IDLE =>	
+
+					-- reset open_loop_done flag
+					open_loop_done <= '0';
+					
 					-- output wave to from temp_wave
 					fp_v_alpha_open <= temp_fp_v_alpha;
 					fp_v_beta_open <= temp_fp_v_beta;
@@ -182,6 +188,7 @@ begin
 					-- Output v_beta from lookup table
 					-- Change from std_logic_vector to sfixed
 					temp_fp_v_beta <= resize(to_sfixed(temp_o_data, temp_o_data'length-1, 0)/SIN_SCALE_FACTOR, temp_fp_v_alpha);
+					open_loop_done <= '1'; 
 					
 					state <= IDLE; 
 				

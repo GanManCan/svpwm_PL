@@ -30,6 +30,7 @@ vunit_tests/vunit_out
 ######################
 *.log
 .bkp
+.dtmp
 
 # Packages #
 ############
