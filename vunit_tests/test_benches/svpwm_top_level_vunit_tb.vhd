@@ -148,10 +148,6 @@ begin -- start of architecture --
         wait until rising_edge(clk);
         wait until rising_edge(clk);
         wait for 1 ps;
-
-        --check(fp_v_alpha_open = to_sfixed(0.0,20,-11), "Check v_alpha reset value");
-        --check(fp_v_beta_open = to_sfixed(0.0,20,-11), "Check v_beta reset value");
-        --check(spy_state = IDLE, "Check reset state");
         
         info("==== TEST CASE FINISHED =====");  
 

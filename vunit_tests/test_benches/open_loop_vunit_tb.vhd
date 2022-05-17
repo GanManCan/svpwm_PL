@@ -177,7 +177,7 @@ begin -- start of architecture --
         info("TEST CASE: open_loop_check_states");
         info("--------------------------------------------------------------------------------");
         
-        freq <= std_logic_vector(to_unsigned(100, freq'length));
+        freq <= std_logic_vector(to_unsigned(60, freq'length));
 
         wait until reset_n = '1';
         wait for 1 ps;
