@@ -284,13 +284,16 @@ begin -- start of architecture --
         info("TEST CASE: svpwm_gate_pulse_on_off_check");
         info("--------------------------------------------------------------------------------");
         
-        fire_u <= std_logic_vector(to_signed(50, fire_u'length));
-        sim_fire_set <= 50;
+        fire_u <= std_logic_vector(to_signed(dead_time_cnt, fire_u'length));
+        fire_v <= std_logic_vector(to_signed(dead_time_cnt, fire_v'length));
+        fire_w <= std_logic_vector(to_signed(dead_time_cnt, fire_w'length));
+        sim_fire_set <= dead_time_cnt;
         wait until reset_n = '1';
         wait for 1 ps; 
 
         check(dead_time_cnt < (int_t0 - dead_time_cnt), "Check loop is able to run");
 
+        -- Loop through various in range firme time values
         for ii in dead_time_cnt to (int_t0 - dead_time_cnt) loop
 
           ------------------------------------------------------------------------
@@ -303,9 +306,15 @@ begin -- start of architecture --
                     msg=>result("Check counter is coutning up (count_dir = 1"));
           check(gate_u_l = '1', "On up count: check gate_u_l is high berfore fire value"); 
           check(gate_u = '0', "On up count: check gate_u is low berfore fire value");
+          check(gate_v_l = '1', "On up count: check gate_v_l is high berfore fire value"); 
+          check(gate_v = '0', "On up count: check gate_v is low berfore fire value");
+          check(gate_w_l = '1', "On up count: check gate_w_l is high berfore fire value"); 
+          check(gate_w = '0', "On up count: check gate_w is low berfore fire value");
 
           --set next value
           fire_u <= std_logic_vector(to_signed(ii+1, fire_u'length)); 
+          fire_v <= std_logic_vector(to_signed(ii+1, fire_v'length));
+          fire_w <= std_logic_vector(to_signed(ii+1, fire_w'length));
           sim_fire_set <= ii+1;
           wait for 1 ps; 
 
@@ -316,7 +325,11 @@ begin -- start of architecture --
           check_equal(got=>spy_count_dir, expected=>'1', 
                     msg=>result("Check counter is coutning up (count_dir = 1"));
           check(gate_u_l = '0', "On up count: check gate_u_l is low after fire value"); 
-          check(gate_u = '0', "On up count: check gate_u_l is low after fire value (in dead band)");
+          check(gate_u = '0', "On up count: check gate_u is low after fire value (in dead band)");
+          check(gate_v_l = '0', "On up count: check gate_v_l is low after fire value"); 
+          check(gate_v = '0', "On up count: check gate_v is low after fire value (in dead band)");
+          check(gate_w_l = '0', "On up count: check gate_w_l is low after fire value"); 
+          check(gate_w = '0', "On up count: check gate_w is low after fire value (in dead band)");
 
           ------------------------------------------------------------------------
           -- On down count, check gate_u tranistions at right value
@@ -326,11 +339,17 @@ begin -- start of architecture --
           
           check_equal(got=>spy_count_dir, expected=>'0', 
                     msg=>result("Check counter is coutning down (count_dir = 0"));
-          check(gate_u_l = '0', "On down count: check gate_u_l is low berfore fire value"); 
-          check(gate_u = '1', "On down count: check gate_u is high berfore fire value");
+          check(gate_u_l = '0', "On down count: check gate is low berfore fire value"); 
+          check(gate_u = '1', "On down count: check gate is high berfore fire value");
+          check(gate_v_l = '0', "On down count: check gate is low berfore fire value"); 
+          check(gate_v = '1', "On down count: check gate is high berfore fire value");
+          check(gate_w_l = '0', "On down count: check gate is low berfore fire value"); 
+          check(gate_w = '1', "On down count: check gate is high berfore fire value");
 
           --set next value
           fire_u <= std_logic_vector(to_signed(ii, fire_u'length)); 
+          fire_v <= std_logic_vector(to_signed(ii, fire_v'length));
+          fire_w <= std_logic_vector(to_signed(ii, fire_w'length));
           sim_fire_set <= ii;
           wait for 1 ps; 
 
@@ -339,8 +358,12 @@ begin -- start of architecture --
 
           check_equal(got=>spy_count_dir, expected=>'0', 
                     msg=>result("Check counter is coutning down (count_dir = 0"));
-          check(gate_u_l = '0', "On down count: check gate_u_l is low after fire value"); 
-          check(gate_u = '0', "On down count: check gate_u is low after fire value (in dead band)");
+          check(gate_u_l = '0', "On down count: check gate is low after fire value"); 
+          check(gate_u = '0', "On down count: check gate is low after fire value (in dead band)");
+          check(gate_v_l = '0', "On down count: check gate is low after fire value"); 
+          check(gate_v = '0', "On down count: check gate is low after fire value (in dead band)");
+          check(gate_w_l = '0', "On down count: check gate is low after fire value"); 
+          check(gate_w = '0', "On down count: check gate is low after fire value (in dead band)");
 
         end loop; --for ii in dead_time_cnt
 
