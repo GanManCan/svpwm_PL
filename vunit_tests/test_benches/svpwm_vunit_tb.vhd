@@ -103,8 +103,7 @@ architecture tb of svpwm_vunit_tb is
   signal sim_int_counter_period :INTEGER := sys_clk/pwm_freq/2;
   signal sim_counter_dir : std_logic := '1'; -- 1 is up direction
   signal sim_dead_count : integer := 0; 
-  signal sim_gate_hold : std_logic; 
-  signal sim_gate_l_hold : std_logic; 
+  SIGNAL sim_fire_set : integer := 0; 
 
   -- Signals to read files
   file file_vectors : text; 
@@ -273,124 +272,41 @@ begin -- start of architecture --
 
       ----------------------------------------------------------------------
       -- TEST CASE DESCRIPTION:
-      --   Compare gate to test txt file
-      --   Checks each counter/cycle
-      --   Also checks that values are locked in a the correct time
+      --   Checks when gates turn on
+      --   During up cont - check low gate
+      --   During down cnt -- checks high gate
       -- Expected Result:
         -- 
       --------------------------------------------------------------------
-      ELSIF run("svpwm_gate_pulse_width_check") THEN
+      ELSIF run("svpwm_gate_pulse_on_off_check") THEN
         info("--------------------------------------------------------------------------------");
-        info("TEST CASE: svpwm_gate_pulse_width_check");
+        info("TEST CASE: svpwm_gate_pulse_on_off_check");
         info("--------------------------------------------------------------------------------");
         
-        file_open(file_VECTORS, "C:\Users\mgann\Xilinix_Projects\svpwm_PL\vunit_tests\python\svpwm_test_cases.txt",  read_mode);
-
-        -- read in first line 
-        readline(file_VECTORS, v_ILINE);
-        read(v_ILINE, read_ftg_u);
-        read(v_ILINE, v_SPACE);   -- read in the space character
-        read(v_ILINE, read_lock_ftg_u);
-        read(v_ILINE, v_SPACE);   
-        read(v_ILINE, read_gate_u);
-        read(v_ILINE, v_SPACE);   
-        read(v_ILINE, read_gate_u_l);
-        read(v_ILINE, v_SPACE);   
-        read(v_ILINE, read_ftg_v);
-        read(v_ILINE, v_SPACE);   -- read in the space character
-        read(v_ILINE, read_lock_ftg_v);
-        read(v_ILINE, v_SPACE);   
-        read(v_ILINE, read_gate_v);
-        read(v_ILINE, v_SPACE);   
-        read(v_ILINE, read_gate_v_l);
-        read(v_ILINE, v_SPACE); 
-        read(v_ILINE, read_ftg_w);
-        read(v_ILINE, v_SPACE);   -- read in the space character
-        read(v_ILINE, read_lock_ftg_w);
-        read(v_ILINE, v_SPACE);   
-        read(v_ILINE, read_gate_w);
-        read(v_ILINE, v_SPACE);   
-        read(v_ILINE, read_gate_w_l);
-        read(v_ILINE, v_SPACE); 
-        read(v_ILINE, read_counter);
-
-        fire_u <= std_logic_vector(to_signed(read_ftg_u, fire_u'length));
-        fire_v <= std_logic_vector(to_signed(read_ftg_v, fire_v'length));
-        fire_w <= std_logic_vector(to_signed(read_ftg_w, fire_w'length));
-
-        wait until rising_edge(clk);
-        wait for 1 ps; 
-        check_equal(spy_counter, read_counter, result("Check spy_counter equal read_counter"));
-
+        fire_u <= std_logic_vector(to_signed(50, fire_u'length));
+        sim_fire_set <= 50;
         wait until reset_n = '1';
         wait for 1 ps; 
 
-        while not endfile(file_VECTORS) loop
-          readline(file_VECTORS, v_ILINE);
-          read(v_ILINE, read_ftg_u);
-          read(v_ILINE, v_SPACE);   -- read in the space character
-          read(v_ILINE, read_lock_ftg_u);
-          read(v_ILINE, v_SPACE);   
-          read(v_ILINE, read_gate_u);
-          read(v_ILINE, v_SPACE);   
-          read(v_ILINE, read_gate_u_l);
-          read(v_ILINE, v_SPACE);   
-          read(v_ILINE, read_ftg_v);
-          read(v_ILINE, v_SPACE);   -- read in the space character
-          read(v_ILINE, read_lock_ftg_v);
-          read(v_ILINE, v_SPACE);   
-          read(v_ILINE, read_gate_v);
-          read(v_ILINE, v_SPACE);   
-          read(v_ILINE, read_gate_v_l);
-          read(v_ILINE, v_SPACE); 
-          read(v_ILINE, read_ftg_w);
-          read(v_ILINE, v_SPACE);   -- read in the space character
-          read(v_ILINE, read_lock_ftg_w);
-          read(v_ILINE, v_SPACE);   
-          read(v_ILINE, read_gate_w);
-          read(v_ILINE, v_SPACE);   
-          read(v_ILINE, read_gate_w_l);
-          read(v_ILINE, v_SPACE); 
-          read(v_ILINE, read_counter);
-
-          fire_u <= std_logic_vector(to_signed(read_ftg_u, fire_u'length));
-          fire_v <= std_logic_vector(to_signed(read_ftg_v, fire_v'length));
-          fire_w <= std_logic_vector(to_signed(read_ftg_w, fire_w'length));
-
-          temp_read_gate_u <= read_gate_u;
-          temp_read_gate_u_l <= read_gate_u_l;
-
-          wait for 1 ps;
-
-          check_equal(got=> gate_u, expected=> read_gate_u, 
-               msg=>result("Check gate_u to test file"));
-
-          check_equal(got=> gate_u_l, expected=> read_gate_u_l, 
-              msg=>result("Check gate_u_l to test file"));
-
-          check_equal(got=> gate_v, expected=> read_gate_v, 
-               msg=>result("Check gate_v to test file"));
-
-          check_equal(got=> gate_v_l, expected=> read_gate_v_l, 
-               msg=>result("Check gate_v_l to test file"));
-
-          check_equal(got=> gate_w, expected=> read_gate_w, 
-               msg=>result("Check gate_w value to test file"));
-
-          check_equal(got=> gate_w_l, expected=> read_gate_w_l, 
-               msg=>result("Check gate_w_l to test file"));
-
-          check_equal(got=>spy_counter, expected=>read_counter, 
-                msg=>result("Check spy_counter equal read_counter"));
-
-
-          wait until rising_edge(clk);
-          wait for 1 ps; 
-
-        end loop;
+        -- On up count, check gate_ul tranistions at right value
+        wait until (spy_counter = 51); 
+        wait for 1 ps;
         
+        check_equal(got=>spy_count_dir, expected=>'1', 
+                  msg=>result("Check counter is coutning up (count_dir = 1"));
+        check(gate_u_l = '1', "On up count: check gate_u_l is high berfore fire value"); 
+        check(gate_u = '0', "On up count: check gate_u_l is low berfore fire value");
 
-        --wait for C_CLK_PERIOD*sim_int_counter_period*4;
+        wait until rising_edge(clk);
+        wait for 1 ps; 
+
+        check_equal(got=>spy_count_dir, expected=>'1', 
+                  msg=>result("Check counter is coutning up (count_dir = 1"));
+        check(gate_u_l = '0', "On up count: check gate_u_l is low after fire value"); 
+        check(gate_u = '0', "On up count: check gate_u_l is low after fire value (in dead band)");
+
+
+
 
 
       ----------------------------------------------------------------------
@@ -435,7 +351,17 @@ begin -- start of architecture --
 
         end loop; -- for ii in 
 
-
+      --------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+      -- Check that out of bounds values go to default state
+      -- Expected Result:
+        -- 
+      --------------------------------------------------------------------
+      ELSIF run("svpwm_") THEN
+        info("--------------------------------------------------------------------------------");
+        info("TEST CASE: out_of_bounds_check");
+        info("--------------------------------------------------------------------------------");
+        wait until reset_n = '1';
         
         
       ----------------------------------------------------------------------
