@@ -275,6 +275,7 @@ begin -- start of architecture --
       --   Checks when gates turn on
       --   During up cont - check low gate
       --   During down cnt -- checks high gate
+      --   Only checks values that do not cause gates to be either always on or always off
       -- Expected Result:
         -- 
       --------------------------------------------------------------------
@@ -288,24 +289,60 @@ begin -- start of architecture --
         wait until reset_n = '1';
         wait for 1 ps; 
 
-        -- On up count, check gate_ul tranistions at right value
-        wait until (spy_counter = 51); 
-        wait for 1 ps;
-        
-        check_equal(got=>spy_count_dir, expected=>'1', 
-                  msg=>result("Check counter is coutning up (count_dir = 1"));
-        check(gate_u_l = '1', "On up count: check gate_u_l is high berfore fire value"); 
-        check(gate_u = '0', "On up count: check gate_u_l is low berfore fire value");
+        check(dead_time_cnt < (int_t0 - dead_time_cnt), "Check loop is able to run");
 
-        wait until rising_edge(clk);
-        wait for 1 ps; 
+        for ii in dead_time_cnt to (int_t0 - dead_time_cnt) loop
 
-        check_equal(got=>spy_count_dir, expected=>'1', 
-                  msg=>result("Check counter is coutning up (count_dir = 1"));
-        check(gate_u_l = '0', "On up count: check gate_u_l is low after fire value"); 
-        check(gate_u = '0', "On up count: check gate_u_l is low after fire value (in dead band)");
+          ------------------------------------------------------------------------
+          -- On up count, check gate_ul tranistions at right value
+          ------------------------------------------------------------------------
+          wait until (spy_counter = (sim_fire_set+1)); 
+          wait for 1 ps;
+          
+          check_equal(got=>spy_count_dir, expected=>'1', 
+                    msg=>result("Check counter is coutning up (count_dir = 1"));
+          check(gate_u_l = '1', "On up count: check gate_u_l is high berfore fire value"); 
+          check(gate_u = '0', "On up count: check gate_u is low berfore fire value");
+
+          --set next value
+          fire_u <= std_logic_vector(to_signed(ii+1, fire_u'length)); 
+          sim_fire_set <= ii+1;
+          wait for 1 ps; 
 
 
+          wait until rising_edge(clk);
+          wait for 1 ps; 
+
+          check_equal(got=>spy_count_dir, expected=>'1', 
+                    msg=>result("Check counter is coutning up (count_dir = 1"));
+          check(gate_u_l = '0', "On up count: check gate_u_l is low after fire value"); 
+          check(gate_u = '0', "On up count: check gate_u_l is low after fire value (in dead band)");
+
+          ------------------------------------------------------------------------
+          -- On down count, check gate_u tranistions at right value
+          ------------------------------------------------------------------------
+          wait until (spy_counter = (sim_fire_set)); 
+          wait for 1 ps;
+          
+          check_equal(got=>spy_count_dir, expected=>'0', 
+                    msg=>result("Check counter is coutning down (count_dir = 0"));
+          check(gate_u_l = '0', "On down count: check gate_u_l is low berfore fire value"); 
+          check(gate_u = '1', "On down count: check gate_u is high berfore fire value");
+
+          --set next value
+          fire_u <= std_logic_vector(to_signed(ii, fire_u'length)); 
+          sim_fire_set <= ii;
+          wait for 1 ps; 
+
+          wait until rising_edge(clk);
+          wait for 1 ps; 
+
+          check_equal(got=>spy_count_dir, expected=>'0', 
+                    msg=>result("Check counter is coutning down (count_dir = 0"));
+          check(gate_u_l = '0', "On down count: check gate_u_l is low after fire value"); 
+          check(gate_u = '0', "On down count: check gate_u is low after fire value (in dead band)");
+
+        end loop; --for ii in dead_time_cnt
 
 
 
@@ -353,15 +390,15 @@ begin -- start of architecture --
 
       --------------------------------------------------------------------
       -- TEST CASE DESCRIPTION:
-      -- Check that out of bounds values go to default state
+        -- Check that fire time signals that are high have correct output
       -- Expected Result:
-        -- 
+        -- Gate_u(_l) will remain on or off for the entire duration
       --------------------------------------------------------------------
-      ELSIF run("svpwm_") THEN
-        info("--------------------------------------------------------------------------------");
-        info("TEST CASE: out_of_bounds_check");
-        info("--------------------------------------------------------------------------------");
-        wait until reset_n = '1';
+      --ELSIF run("svpwm_deadband_overlap_high_check") THEN
+      --  info("--------------------------------------------------------------------------------");
+      --  info("TEST CASE: svpwm_deadband_overlap_high_check");
+      --  info("--------------------------------------------------------------------------------");
+      --  wait until reset_n = '1';
         
         
       ----------------------------------------------------------------------
@@ -370,7 +407,7 @@ begin -- start of architecture --
       -- Expected Result:
         -- 
       --------------------------------------------------------------------
-      --ELSIF run("out_of_bounds_check") THEN
+      --ELSIF run("gate_checks") THEN
       --  info("--------------------------------------------------------------------------------");
       --  info("TEST CASE: out_of_bounds_check");
       --  info("--------------------------------------------------------------------------------");
