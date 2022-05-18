@@ -10,8 +10,9 @@ add wave -noupdate /svpwm_top_level_vunit_tb/gate_v_l
 add wave -noupdate /svpwm_top_level_vunit_tb/gate_w
 add wave -noupdate /svpwm_top_level_vunit_tb/gate_w_l
 add wave -noupdate -divider {Spy Signals}
-add wave -noupdate -max 4294967283.0 -radix unsigned /svpwm_top_level_vunit_tb/spy_fp_v_alpha
-add wave -noupdate -max 4294967283.0 -radix unsigned /svpwm_top_level_vunit_tb/spy_fp_v_beta
+add wave -noupdate -radix sfixed /svpwm_top_level_vunit_tb/spy_fp_v_alpha
+add wave -noupdate -radix sfixed /svpwm_top_level_vunit_tb/spy_fp_v_beta
+add wave -noupdate -divider Debug
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {4195074849 ps} 0}
 quietly wave cursor active 1

@@ -68,6 +68,7 @@ architecture tb of svpwm_vunit_tb is
 
   -- simulation constants :
   constant c_clk_period : time := 20 ns;
+
   
 
   -- INTERNAL SIGNALS DECLARATION --
@@ -77,6 +78,11 @@ architecture tb of svpwm_vunit_tb is
   constant bits_resolution : INTEGER := 32;           
   constant v_dc            : INTEGER := 200;
   constant dead_time_ns : INTEGER := 800; 
+  CONSTANT dead_time_cnt    : INTEGER := sys_clk/1000/1000*dead_time_ns/1000;
+  CONSTANT int_t0    : INTEGER   := sys_clk/pwm_freq/2; -- Period = number of clocks in SVPWM cycle
+                                                        -- Note 2 SVPWM cycles per switching cycle
+
+
 
   -- DUT interface
   signal clk      : std_logic := '0';
@@ -96,6 +102,9 @@ architecture tb of svpwm_vunit_tb is
   signal sim_counter : INTEGER := 0; 
   signal sim_int_counter_period :INTEGER := sys_clk/pwm_freq/2;
   signal sim_counter_dir : std_logic := '1'; -- 1 is up direction
+  signal sim_dead_count : integer := 0; 
+  signal sim_gate_hold : std_logic; 
+  signal sim_gate_l_hold : std_logic; 
 
   -- Signals to read files
   file file_vectors : text; 
@@ -132,6 +141,10 @@ architecture tb of svpwm_vunit_tb is
    <<signal .svpwm_tb_inst.lock_fire_v : std_logic_vector(bits_resolution-1 downto 0) >>;
   alias spy_lock_fire_w is 
    <<signal .svpwm_tb_inst.lock_fire_w : std_logic_vector(bits_resolution-1 downto 0) >>;
+
+  alias spy_count_dir is 
+   <<signal .svpwm_tb_inst.count_dir : std_logic>>; 
+
 
 
 
@@ -380,7 +393,50 @@ begin -- start of architecture --
         --wait for C_CLK_PERIOD*sim_int_counter_period*4;
 
 
-    
+      ----------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+        -- Check the Gate U pulse width is as expected for given Fire_u input 
+      -- Expected Result:
+        -- 
+      --------------------------------------------------------------------
+      ELSIF run("svpwm_gate_u_dead_band_check") THEN
+        info("--------------------------------------------------------------------------------");
+        info("TEST CASE: svpwm_gate_u_dead_band_check");
+        info("--------------------------------------------------------------------------------");
+        
+        wait until reset_n = '1';
+        wait for 1 ps; 
+
+        for ii in 1 to int_t0-10 loop
+
+          fire_u <= std_logic_vector(to_signed(ii, fire_u'length));
+
+          wait until ((gate_u_l = '0') and (gate_u = '0')); 
+          wait for 1 ps; 
+          sim_dead_count <= 0; -- Reset sim dead count
+          check(gate_u = '0', "Check Gate_u is set to '0' in the deadband");
+          check(gate_u_l = '0', "Check Gate_u is set to '0' in the deadband");
+
+
+          -- Increment counter while in dead band
+          while(gate_u_l = '0' and gate_u = '0') loop
+            wait until rising_edge (clk);
+            wait for 1 ps; 
+            sim_dead_count <= sim_dead_count + 1;
+          end loop;
+
+          wait for 1 ps; 
+          sim_dead_count <= sim_dead_count - 1; -- decrement count to correct for extra add
+          wait for 1 ps; 
+          check_equal(ii,ii, "Print ii");
+          check_equal(got=>sim_dead_count, expected=>dead_time_cnt, 
+                  msg=>result("Check sim_dead count = dead_time_cnt"));
+
+
+        end loop; -- for ii in 
+
+
+        
         
       ----------------------------------------------------------------------
       -- TEST CASE DESCRIPTION:
@@ -401,6 +457,15 @@ begin -- start of architecture --
     test_runner_cleanup(runner); -- end of simulation 
   end process test_runner; 
 
+
+  ------------------------------------------------------------------------------
+  -- Sim Counter Procss
+  ------------------------------------------------------------------------------
+  --sim_dead_counter_inc : process
+  --begin
+  --  wait until clk'event and clk ='1';
+  --  sim_dead_count <= sim_dead_count + 1;
+  --end process sim_dead_counter_inc; 
   --------------------------------------------------------------------------------
   -- Gate signal stability checker
   ------------------------------------------------------------------------------

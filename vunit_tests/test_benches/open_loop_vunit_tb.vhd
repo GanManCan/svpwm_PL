@@ -93,13 +93,13 @@ architecture tb of open_loop_vunit_tb is
   type STATE_TYPE is (IDLE, CALC_FREQ_COUNTER, V_ALPHA_LOOKUP, V_BETA_LOOKUP);
 
   alias spy_state is
-    <<signal.open_loop_ref_inst.state : STATE_TYPE >>;
+    <<signal .open_loop_ref_inst.state : STATE_TYPE >>;
 
   alias spy_rtc_counter is
-    <<signal.open_loop_ref_inst.int_rtc_clk_counter : INTEGER range 0 to 16777215 >>;
+    <<signal .open_loop_ref_inst.int_rtc_clk_counter : INTEGER range 0 to 16777215 >>;
 
   alias spy_rtc_setpoint is
-    <<signal.open_loop_ref_inst.int_rtc_clk_setpoint : INTEGER >>;
+    <<signal .open_loop_ref_inst.int_rtc_clk_setpoint : INTEGER >>;
 
   
 begin -- start of architecture -- 

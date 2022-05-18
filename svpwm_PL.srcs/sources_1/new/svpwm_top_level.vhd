@@ -52,7 +52,8 @@ architecture rtl of svpwm_top_level is
 			en              : IN  std_logic;
 			freq            : IN  std_logic_vector(freq_bits-1 downto 0);
 			fp_v_alpha_open : OUT sfixed (20 downto -11);
-			fp_v_beta_open  : OUT sfixed (20 downto -11)
+			fp_v_beta_open  : OUT sfixed (20 downto -11);
+			open_loop_done	: out std_logic
 		);
 	end component open_loop_ref;
 
@@ -111,6 +112,9 @@ architecture rtl of svpwm_top_level is
   constant bits_resolution 	: integer := 32; 
   constant pwm_freq 				: integer := 3_000; 
 
+  CONSTANT int_t0    : INTEGER   := sys_clk/pwm_freq/2; -- Period = number of clocks in SVPWM cycle
+                                                        -- Note 2 SVPWM cycles per switching cycle
+
   ------------------------------------------------------------------------------
 	-- Signal Declarations
 	------------------------------------------------------------------------------
@@ -120,6 +124,7 @@ architecture rtl of svpwm_top_level is
 	signal freq            : std_logic_vector(freq_bits-1 downto 0);
 	signal fp_v_alpha_open : sfixed (20 downto -11);
 	signal fp_v_beta_open  : sfixed (20 downto -11);	
+	signal open_loop_done : std_logic; 
 
 	-- Open_loop_ref signals
 	signal fp_v_alpha      : sfixed(20 downto -11);
@@ -129,11 +134,19 @@ architecture rtl of svpwm_top_level is
 	signal fire_u          : std_logic_vector(bits_resolution-1 downto 0);
 	signal fire_v          : std_logic_vector(bits_resolution-1 downto 0);
 	signal fire_w          : std_logic_vector(bits_resolution-1 downto 0);	
+
+	-- Process Variables
+	signal count_dir 			: std_logic  := '1'; -- 1 to count up; 0 to count down  
+  signal counter        : integer range -65533 to 65533  := 0;  
  
   
 	-- Temp signals
 	signal v_alpha   : std_logic_vector(31 downto 0) := (OTHERS => '0'); 
 	signal v_beta    : std_logic_vector(31 downto 0) := (OTHERS => '0'); 
+
+	-- State Vaiable
+	type STATE_TYPE_TOP is (IDLE, LOAD, CALC);
+	signal state	: STATE_TYPE_TOP; 
 
 ---------------------------------------------------------------------------------
 -- Begin
@@ -153,7 +166,8 @@ begin
 			en              => en,
 			freq            => freq,
 			fp_v_alpha_open => fp_v_alpha,
-			fp_v_beta_open  => fp_v_beta
+			fp_v_beta_open  => fp_v_beta,
+			open_loop_done  => open_loop_done
 		);  
 
 	firing_time_generator_1 : entity work.firing_time_generator
@@ -166,7 +180,7 @@ begin
 		port map (
 			clk             => clk,
 			reset_n         => reset_n,
-			fire_time_start => fire_time_start,
+			fire_time_start => open_loop_done,
 			fp_v_alpha      => fp_v_alpha,
 			fp_v_beta       => fp_v_beta,
 			fire_time_done  => fire_time_done,
@@ -175,7 +189,7 @@ begin
 			fire_w          => fire_w
 		);	
 
-		svpwm_1 : entity work.svpwm
+	svpwm_1 : entity work.svpwm
 			generic map (
 				sys_clk         => sys_clk,
 				pwm_freq        => pwm_freq,
@@ -195,7 +209,54 @@ begin
 				gate_v_l => gate_v_l,
 				gate_w   => gate_w,
 				gate_w_l => gate_w_l
-			);   
+	);
+
+	------------------------------------------------------------------------------
+	-- Process: PWM_Counter
+	------------------------------------------------------------------------------
+	pwm_counter : process(reset_n,clk)
+	begin
+		if(reset_n = '0') then
+			-- Reset Values
+			counter <= 0;     -- reset teh counter 
+			count_dir <= '1'; -- Set count to up direction 
+
+		elsif(clk'event and clk = '1') then
+			-- Increment/Decrement Counter logic
+      if(count_dir = '1') then
+	  	 	counter <= counter + 1; -- increment counter
+				-- If counter reaches period, change decrement, lock in fire value
+				-- Counter is 0 based so need to offset by 2 to account for 
+				-- 		0 and the delay to propagate the signal
+				if(counter >= int_t0 - 2) then
+		  		count_dir <= '0'; 
+				end if; -- if(count > int_t0)
+      else
+        counter <= counter - 1; 
+				-- If counter reaches period, change to increment, lock in fire value
+				if(counter <= 1) then
+		  		count_dir <= '1'; 
+		  	end if; -- if(count <= 0)
+    	end if; -- if(count_dir = '1') 
+		end if; -- if(reset_n = '0')
+	end process pwm_counter; 
+
+	------------------------------------------------------------------------------
+	-- Process: State Machine Top Level 
+	------------------------------------------------------------------------------
+	state_machine_top_level : process(reset_n, clk)
+	begin
+		if(reset_n = '0') then
+			-- Reset Values
+
+		elsif(clk'event and clk = '1') then
+			
+
+		end if; -- if(reset_n = '0')
+
+	end process state_machine_top_level; 
+
+
 
 
 end rtl;
