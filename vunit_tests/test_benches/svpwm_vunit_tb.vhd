@@ -68,7 +68,7 @@ architecture tb of svpwm_vunit_tb is
   -- INTERNAL SIGNALS DECLARATION --
   -- DUT constants
   constant sys_clk         : INTEGER := 50_000_000;  
-  constant pwm_freq        : INTEGER := 100_000;      
+  constant pwm_freq        : INTEGER := 10_000;      
   constant bits_resolution : INTEGER := 32;           
   constant v_dc            : INTEGER := 200;
   constant dead_time_ns : INTEGER := 800; 
@@ -380,9 +380,9 @@ begin -- start of architecture --
           wait for 1 ps; 
           sim_dead_count <= sim_dead_count - 1; -- decrement count to correct for extra add
           wait for 1 ps; 
-          check_equal(ii,ii, "Print ii");
           check_equal(got=>sim_dead_count, expected=>dead_time_cnt, 
                   msg=>result("Check sim_dead count = dead_time_cnt"));
+
 
 
         end loop; -- for ii in 

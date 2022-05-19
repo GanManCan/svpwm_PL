@@ -110,7 +110,7 @@ architecture rtl of svpwm_top_level is
   constant dead_time_ns 		: integer := 10;
   constant v_dc							: integer := 200; 
   constant bits_resolution 	: integer := 32; 
-  constant pwm_freq 				: integer := 3_000; 
+  constant pwm_freq 				: integer := 10_000; 
 
   CONSTANT int_t0    : INTEGER   := sys_clk/pwm_freq/2; -- Period = number of clocks in SVPWM cycle
                                                         -- Note 2 SVPWM cycles per switching cycle
@@ -146,7 +146,7 @@ architecture rtl of svpwm_top_level is
 
 	-- State Vaiable
 	type STATE_TYPE_TOP is (IDLE, LOAD, CALC);
-	signal state	: STATE_TYPE_TOP; 
+	signal state	: STATE_TYPE_TOP := IDLE; 
 
 ---------------------------------------------------------------------------------
 -- Begin
@@ -220,6 +220,7 @@ begin
 			-- Reset Values
 			counter <= 0;     -- reset teh counter 
 			count_dir <= '1'; -- Set count to up direction 
+			
 
 		elsif(clk'event and clk = '1') then
 			-- Increment/Decrement Counter logic
@@ -248,8 +249,25 @@ begin
 	begin
 		if(reset_n = '0') then
 			-- Reset Values
-
+			state <= IDLE; 
 		elsif(clk'event and clk = '1') then
+
+			case STATE is
+				when IDLE =>
+					fire_time_start <= '0'; 
+
+					if(counter = 100) then
+						STATE <= LOAD; 
+					end if; -- if(counter = )
+
+				when LOAD => 
+					fire_time_start <= '1'; 
+
+					state <= IDLE;  
+					
+				when others =>
+					null;
+			end case; -- end case STATE
 			
 
 		end if; -- if(reset_n = '0')
