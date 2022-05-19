@@ -72,7 +72,7 @@ architecture tb of svpwm_top_level_vunit_tb is
   -- INTERNAL SIGNALS DECLARATION --
   -- DUT constants
   constant sys_clk    : INTEGER := 50_000_000;  
-  constant pwm_freq   : INTEGER := 10_000; 
+  constant pwm_freq   : INTEGER := 100_000; 
   constant freq_bits  : INTEGER := 8;      
 
   -- DUT interface
@@ -273,12 +273,13 @@ begin -- start of architecture --
         -- 
       --------------------------------------------------------------------
       ELSIF run("svpwm_top_level_debug") THEN
+        -- vunit: .debug
         info("--------------------------------------------------------------------------------");
         info("TEST CASE: svpwm_top_level_debug");
         info("--------------------------------------------------------------------------------");
         wait until reset_n = '1';
 
-      for i in 0 to 100_000   loop
+        for i in 0 to 100_000   loop
           wait until rising_edge(clk);   
         end loop ;        
         wait for 1 ps;
