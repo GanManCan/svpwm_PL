@@ -224,7 +224,7 @@ begin -- start of architecture --
           check(spy_state = IDLE, "Check state in idle");
           check_equal(spy_firing_time_start, '0', "Check spy_firing_time_start returns '0' after 1 cycle");
         end loop; --for ii in 0 to 10 
-        
+
         wait until rising_edge(clk);
         info("==== TEST CASE FINISHED ====="); 
 
@@ -268,21 +268,21 @@ begin -- start of architecture --
 
       ----------------------------------------------------------------------
       -- TEST CASE DESCRIPTION:
-      -- Check that out of bounds values go to default state
+        -- Use for Graphical Debug
       -- Expected Result:
         -- 
       --------------------------------------------------------------------
-      --ELSIF run("svpwm_top_level_debug") THEN
-      --  info("--------------------------------------------------------------------------------");
-      --  info("TEST CASE: out_of_bounds_check");
-      --  info("--------------------------------------------------------------------------------");
-      --  wait until reset_n = '1';
+      ELSIF run("svpwm_top_level_debug") THEN
+        info("--------------------------------------------------------------------------------");
+        info("TEST CASE: svpwm_top_level_debug");
+        info("--------------------------------------------------------------------------------");
+        wait until reset_n = '1';
 
-      --for i in 0 to 1_000_000   loop
-      --    wait until rising_edge(clk);   
-      --  end loop ;        
-      --  wait for 1 ps;
-      --  info("==== TEST CASE FINISHED ====="); 
+      for i in 0 to 100_000   loop
+          wait until rising_edge(clk);   
+        end loop ;        
+        wait for 1 ps;
+        info("==== TEST CASE FINISHED ====="); 
 
       end if; -- for test_suite
     end loop test_cases_loop;

@@ -110,7 +110,7 @@ architecture rtl of svpwm_top_level is
   constant dead_time_ns 		: integer := 10;
   constant v_dc							: integer := 200; 
   constant bits_resolution 	: integer := 32; 
-  constant pwm_freq 				: integer := 10_000; 
+  constant pwm_freq 				: integer := 100_000; 
 
   CONSTANT int_t0    : INTEGER   := sys_clk/pwm_freq/2; -- Period = number of clocks in SVPWM cycle
                                                         -- Note 2 SVPWM cycles per switching cycle
@@ -180,7 +180,7 @@ begin
 		port map (
 			clk             => clk,
 			reset_n         => reset_n,
-			fire_time_start => open_loop_done,
+			fire_time_start => fire_time_start,
 			fp_v_alpha      => fp_v_alpha,
 			fp_v_beta       => fp_v_beta,
 			fire_time_done  => fire_time_done,

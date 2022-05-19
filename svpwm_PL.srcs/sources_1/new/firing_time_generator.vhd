@@ -185,9 +185,9 @@ begin
 					-- Output fireing time calculation for Sectors 1/2
 					-- Set the output after the fp_fire_X_temp value has been calcualted
 					--fire_u <= std_logic_vector(to_signed(fp_fire_u_temp, fire_u'length));
-					fire_u <= to_slv(fp_fire_u_temp);
-					fire_v <= to_slv(fp_fire_v_temp);
-					fire_w <= to_slv(fp_fire_w_temp);
+					fire_u <= std_logic_vector(to_signed(fp_fire_u_temp, fire_u'length));
+					fire_v <= std_logic_vector(to_signed(fp_fire_v_temp, fire_v'length));
+					fire_w <= std_logic_vector(to_signed(fp_fire_w_temp, fire_w'length));
 					
 					-- Move to next state
 					state <= DONE; 

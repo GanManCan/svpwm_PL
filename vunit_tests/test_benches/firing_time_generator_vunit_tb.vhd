@@ -289,16 +289,16 @@ begin -- start of architecture --
 
           wait until fire_time_done = '0';
           wait for 1 ps; 
-          test_real_fire_u <= to_real(to_sfixed(fire_u, 20, -11));
-          test_real_fire_v <= to_real(to_sfixed(fire_v, 20, -11));
-          test_real_fire_w <= to_real(to_sfixed(fire_w, 20, -11));
+          test_real_fire_u <= real(to_integer(signed(fire_u)));
+          test_real_fire_v <= real(to_integer(signed(fire_v)));
+          test_real_fire_w <= real(to_integer(signed(fire_w)));
           --test_real_fire_w <= to_real(to_sfixed(110.1,10,-10));
 
           wait until rising_edge(clk);
           wait for 1 ps; 
-          check_equal(test_real_fire_u, read_fu, max_diff => 3.0);
-          check_equal(test_real_fire_v, read_fv, max_diff => 3.0);
-          check_equal(test_real_fire_w, read_fw, max_diff => 3.0);
+          check_equal(test_real_fire_u, read_fu, max_diff => 4.0);
+          check_equal(test_real_fire_v, read_fv, max_diff => 4.0);
+          check_equal(test_real_fire_w, read_fw, max_diff => 4.0);
           
      
           wait for 60 ns;
@@ -306,8 +306,27 @@ begin -- start of architecture --
      
         file_close(file_VECTORS);
 
+       ----------------------------------------------------------------------
+      -- TEST CASE DESCRIPTION:
+        -- Check that out of bounds values go to default state
+      -- Expected Result:
+        -- 
+      --------------------------------------------------------------------  
+      ELSIF run("ftg_debug") THEN
+        info("--------------------------------------------------------------------------------");
+        info("TEST CASE: ftg_debug");
+        info("--------------------------------------------------------------------------------");
         
+        fp_v_alpha <= to_sfixed(100.0,20,-11);
+        fp_v_beta <= to_sfixed(20.0,20,-11);
+        fire_time_start <= '1';
+        wait until reset_n = '1';
 
+        for i in 0 to 100_000   loop
+          wait until rising_edge(clk);   
+        end loop ;        
+        wait for 1 ps;
+        info("==== TEST CASE FINISHED ====="); 
 
       ----------------------------------------------------------------------
       -- TEST CASE DESCRIPTION:
