@@ -279,7 +279,7 @@ begin -- start of architecture --
         info("--------------------------------------------------------------------------------");
         wait until reset_n = '1';
 
-        for i in 0 to 100_000   loop
+        for i in 0 to 10_000_000   loop
           wait until rising_edge(clk);   
         end loop ;        
         wait for 1 ps;

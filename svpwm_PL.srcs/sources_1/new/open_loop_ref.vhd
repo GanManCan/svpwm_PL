@@ -75,6 +75,9 @@ architecture rtl of open_loop_ref is
 	constant TABLE_SIZE_SIN : integer range 0 to 255 := 251;  -- Table size defined in sine_lookup for 1/4 wave
 	constant TABLE_SIZE_FULL: integer range 0 to 1024 := 1000; 
 	constant SIN_SCALE_FACTOR : sfixed(20 downto -11) := to_sfixed(65535, 20, -11);
+
+	constant V_DC	: integer range 0 to 255 := 200; 
+	constant FP_V_DC : sfixed(10 downto 0) := to_sfixed(V_DC,10,0);
 	
 	
 	-- Signal Declarations
@@ -134,7 +137,7 @@ begin
 
 					-- reset open_loop_done flag
 					open_loop_done <= '0';
-					
+
 					-- output wave to from temp_wave
 					fp_v_alpha_open <= temp_fp_v_alpha;
 					fp_v_beta_open <= temp_fp_v_beta;
@@ -176,7 +179,7 @@ begin
 					
 					-- Output v_alpha from lookup table 
 					-- Change from std_logic_vector to sfixed
-					temp_fp_v_alpha <= resize(to_sfixed(temp_o_data, temp_o_data'length-1, 0)/SIN_SCALE_FACTOR, temp_fp_v_alpha);
+					temp_fp_v_alpha <= resize(FP_V_DC*to_sfixed(temp_o_data, temp_o_data'length-1, 0)/SIN_SCALE_FACTOR, temp_fp_v_alpha);
 					
 					-- Set next sine_save table for v_beta and move to next stae. 
 					sine_table_addr <= std_logic_vector(to_signed(int_v_beta_counter, sine_table_addr'length));  
@@ -187,7 +190,7 @@ begin
 					
 					-- Output v_beta from lookup table
 					-- Change from std_logic_vector to sfixed
-					temp_fp_v_beta <= resize(to_sfixed(temp_o_data, temp_o_data'length-1, 0)/SIN_SCALE_FACTOR, temp_fp_v_alpha);
+					temp_fp_v_beta <= resize(FP_V_DC*to_sfixed(temp_o_data, temp_o_data'length-1, 0)/SIN_SCALE_FACTOR, temp_fp_v_alpha);
 					open_loop_done <= '1'; 
 					
 					state <= IDLE; 
