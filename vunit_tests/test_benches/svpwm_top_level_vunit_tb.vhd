@@ -180,49 +180,51 @@ begin -- start of architecture --
         wait until reset_n = '1';
         wait for 1 ps;
 
-        ------------------------------------------------------------------------
-        -- Check Up Count States; 
-        ------------------------------------------------------------------------
-        check(spy_state = IDLE, "Check state enters IDLE after reset");
-        check_equal(spy_firing_time_start, '0', "Check spy_firing_time_start is '0' in IDLE");
+        for ii in 0 to 9 loop -- Check state transistions over 10 loops 
+          ------------------------------------------------------------------------
+          -- Check Up Count States; 
+          ------------------------------------------------------------------------
+          check(spy_state = IDLE, "Check state enters IDLE after reset");
+          check_equal(spy_firing_time_start, '0', "Check spy_firing_time_start is '0' in IDLE");
 
-        wait until spy_state = LOAD;
-        wait for 1 ps; 
-        check(spy_state = LOAD, "Check state is in LOAD");
-        check_equal(spy_counter, 101, "Check state machine moves to idle on correct count");
+          wait until spy_state = LOAD;
+          wait for 1 ps; 
+          check(spy_state = LOAD, "Check state is in LOAD");
+          check_equal(spy_counter, 101, "Check state machine moves to idle on correct count");
 
-        wait until rising_edge(clk);
-        wait for 1 ps;
+          wait until rising_edge(clk);
+          wait for 1 ps;
 
-        check(spy_state = IDLE, "Check state moves to IDLE after load");
-        check_equal(spy_firing_time_start, '1', "Check spy_firing_time_start is '1' for one cycle after load");
+          check(spy_state = IDLE, "Check state moves to IDLE after load");
+          check_equal(spy_firing_time_start, '1', "Check spy_firing_time_start is '1' for one cycle after load");
 
-        wait until rising_edge(clk); 
-        wait for 1 ps; 
+          wait until rising_edge(clk); 
+          wait for 1 ps; 
 
-        check(spy_state = IDLE, "Check state in idle");
-        check_equal(spy_firing_time_start, '0', "Check spy_firing_time_start returns '0' after 1 cycle");
+          check(spy_state = IDLE, "Check state in idle");
+          check_equal(spy_firing_time_start, '0', "Check spy_firing_time_start returns '0' after 1 cycle");
 
-        ------------------------------------------------------------------------
-        -- Check Down Count States; 
-        ------------------------------------------------------------------------
-        wait until spy_state = LOAD;
-        wait for 1 ps; 
-        check(spy_state = LOAD, "Check state is in LOAD");
-        check_equal(spy_counter, 99, "Check state machine moves to idle on correct count");
+          ------------------------------------------------------------------------
+          -- Check Down Count States; 
+          ------------------------------------------------------------------------
+          wait until spy_state = LOAD;
+          wait for 1 ps; 
+          check(spy_state = LOAD, "Check state is in LOAD");
+          check_equal(spy_counter, 99, "Check state machine moves to idle on correct count");
 
-        wait until rising_edge(clk);
-        wait for 1 ps;
+          wait until rising_edge(clk);
+          wait for 1 ps;
 
-        check(spy_state = IDLE, "Check state moves to IDLE after load");
-        check_equal(spy_firing_time_start, '1', "Check spy_firing_time_start is '1' for one cycle after load");
+          check(spy_state = IDLE, "Check state moves to IDLE after load");
+          check_equal(spy_firing_time_start, '1', "Check spy_firing_time_start is '1' for one cycle after load");
 
-        wait until rising_edge(clk); 
-        wait for 1 ps; 
+          wait until rising_edge(clk); 
+          wait for 1 ps; 
 
-        check(spy_state = IDLE, "Check state in idle");
-        check_equal(spy_firing_time_start, '0', "Check spy_firing_time_start returns '0' after 1 cycle");
-
+          check(spy_state = IDLE, "Check state in idle");
+          check_equal(spy_firing_time_start, '0', "Check spy_firing_time_start returns '0' after 1 cycle");
+        end loop; --for ii in 0 to 10 
+        
         wait until rising_edge(clk);
         info("==== TEST CASE FINISHED ====="); 
 
