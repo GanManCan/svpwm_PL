@@ -50,12 +50,9 @@ use std.textio.all;
 use ieee.std_logic_textio.all;
 
 
-
-
 entity svpwm_vunit_tb is
   generic(runner_cfg : string := runner_cfg_default);
 end entity svpwm_vunit_tb;
-
 
 
 architecture tb of svpwm_vunit_tb is
@@ -65,11 +62,8 @@ architecture tb of svpwm_vunit_tb is
   --------------------------------------------------------------------------
   -- CONSTANTS DECLARATION --
 
-
   -- simulation constants :
   constant c_clk_period : time := 20 ns;
-
-  
 
   -- INTERNAL SIGNALS DECLARATION --
   -- DUT constants
@@ -81,7 +75,6 @@ architecture tb of svpwm_vunit_tb is
   CONSTANT dead_time_cnt    : INTEGER := sys_clk/1000/1000*dead_time_ns/1000;
   CONSTANT int_t0    : INTEGER   := sys_clk/pwm_freq/2; -- Period = number of clocks in SVPWM cycle
                                                         -- Note 2 SVPWM cycles per switching cycle
-
 
 
   -- DUT interface
@@ -111,20 +104,6 @@ architecture tb of svpwm_vunit_tb is
   -- Debug Read signals
   signal temp_read_gate_u : std_logic; 
   signal temp_read_gate_u_l : std_logic;
-  -- Check stable signals
-  --signal check_enable         : std_logic := '1'; 
-  --signal gate_u_start_event   : std_logic := '0';
-  --signal gate_u_end_event     : std_logic := '0';
-  --signal gate_u_l_start_event : std_logic := '0';
-  --signal gate_u_l_end_event   : std_logic := '0';
-  --signal gate_v_start_event   : std_logic := '0';
-  --signal gate_v_end_event     : std_logic := '0';
-  --signal gate_v_l_start_event : std_logic := '0';
-  --signal gate_v_l_end_event   : std_logic := '0';
-  --signal gate_w_start_event   : std_logic := '0';
-  --signal gate_w_end_event     : std_logic := '0';
-  --signal gate_w_l_start_event : std_logic := '0';
-  --signal gate_w_l_end_event   : std_logic := '0';
 
 
   -- Spy Signals
@@ -145,9 +124,6 @@ architecture tb of svpwm_vunit_tb is
    <<signal .svpwm_tb_inst.count_dir : std_logic>>; 
 
 
-
-
-  
   
 begin -- start of architecture -- 
   -------------------------------------------------------------------------- 
@@ -444,77 +420,6 @@ begin -- start of architecture --
   end process test_runner; 
 
 
-  ------------------------------------------------------------------------------
-  -- Sim Counter Procss
-  ------------------------------------------------------------------------------
-  --sim_dead_counter_inc : process
-  --begin
-  --  wait until clk'event and clk ='1';
-  --  sim_dead_count <= sim_dead_count + 1;
-  --end process sim_dead_counter_inc; 
-  --------------------------------------------------------------------------------
-  -- Gate signal stability checker
-  ------------------------------------------------------------------------------
-
-  -- gate_u stability check is high 
-  --check_stable(clock       => clk, 
-  --             en          => check_enable,
-  --             start_event => gate_u_start_event,
-  --             end_event   => gate_u_end_event,
-  --             expr        => gate_u,
-  --             msg         => result("Gate_U switched incorrectly"),
-  --             active_clock_edge => rising_edge,
-  --             allow_restart     => false);
-
---  -- gate_u_l stability check is high 
---  check_stable(clock       => clk, 
---               en          => check_enable,
---               start_event => gate_u_l_start_event,
---               end_event   => gate_u_l_end_event,
---               expr        => gate_u_l,
---               msg         => result("Gate_U_L switched incorrectly"),
---               active_clock_edge => rising_edge,
---               allow_restart     => false);
-
---  -- gate_v stability check is high 
---  check_stable(clock       => clk, 
---               en          => check_enable,
---               start_event => gate_v_start_event,
---               end_event   => gate_v_end_event,
---               expr        => gate_v,
---               msg         => result("Gate_V switched incorrectly"),
---               active_clock_edge => rising_edge,
---               allow_restart     => false);
-
---  -- gate_v_l stability check is high 
---  check_stable(clock       => clk, 
---               en          => check_enable,
---               start_event => gate_v_l_start_event,
---               end_event   => gate_v_l_end_event,
---               expr        => gate_v_l,
---               msg         => result("Gate_V_L switched incorrectly"),
---               active_clock_edge => rising_edge,
---               allow_restart     => false);
-
----- gate_w stability check is high 
---  check_stable(clock       => clk, 
---               en          => check_enable,
---               start_event => gate_w_start_event,
---               end_event   => gate_w_end_event,
---               expr        => gate_w,
---               msg         => result("Gate_W switched incorrectly"),
---               active_clock_edge => rising_edge,
---               allow_restart     => false);
-
---  -- gate_u_l stability check is high 
---  check_stable(clock       => clk, 
---               en          => check_enable,
---               start_event => gate_w_l_start_event,
---               end_event   => gate_w_l_end_event,
---               expr        => gate_w_l,
---               msg         => result("Gate_W_L switched incorrectly"),
---               active_clock_edge => rising_edge,
---               allow_restart     => false);
 
 
 
