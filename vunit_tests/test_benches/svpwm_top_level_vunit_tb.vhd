@@ -180,6 +180,9 @@ begin -- start of architecture --
         wait until reset_n = '1';
         wait for 1 ps;
 
+        ------------------------------------------------------------------------
+        -- Check Up Count States; 
+        ------------------------------------------------------------------------
         check(spy_state = IDLE, "Check state enters IDLE after reset");
         check_equal(spy_firing_time_start, '0', "Check spy_firing_time_start is '0' in IDLE");
 
@@ -200,12 +203,27 @@ begin -- start of architecture --
         check(spy_state = IDLE, "Check state in idle");
         check_equal(spy_firing_time_start, '0', "Check spy_firing_time_start returns '0' after 1 cycle");
 
-               
-        wait until rising_edge(clk);
-        wait until rising_edge(clk);
+        ------------------------------------------------------------------------
+        -- Check Down Count States; 
+        ------------------------------------------------------------------------
+        wait until spy_state = LOAD;
+        wait for 1 ps; 
+        check(spy_state = LOAD, "Check state is in LOAD");
+        check_equal(spy_counter, 99, "Check state machine moves to idle on correct count");
 
-        
+        wait until rising_edge(clk);
+        wait for 1 ps;
 
+        check(spy_state = IDLE, "Check state moves to IDLE after load");
+        check_equal(spy_firing_time_start, '1', "Check spy_firing_time_start is '1' for one cycle after load");
+
+        wait until rising_edge(clk); 
+        wait for 1 ps; 
+
+        check(spy_state = IDLE, "Check state in idle");
+        check_equal(spy_firing_time_start, '0', "Check spy_firing_time_start returns '0' after 1 cycle");
+
+        wait until rising_edge(clk);
         info("==== TEST CASE FINISHED ====="); 
 
 
