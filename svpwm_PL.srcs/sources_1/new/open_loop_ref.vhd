@@ -78,6 +78,8 @@ architecture rtl of open_loop_ref is
 
 	constant V_DC	: integer range 0 to 255 := 200; 
 	constant FP_V_DC : sfixed(10 downto 0) := to_sfixed(V_DC,10,0);
+
+	constant INT_CLK_TABLE : integer range 0 to 25_000_000 := sys_clk/TABLE_SIZE_FULL; 
 	
 	
 	-- Signal Declarations
@@ -90,6 +92,7 @@ architecture rtl of open_loop_ref is
 	signal temp_fp_v_beta	: sfixed(20 downto -11);
 	signal temp_o_data 		: std_logic_vector(18 downto 0); 
 	signal sine_table_addr	: std_logic_vector(15 downto 0); 
+	signal int_state_counter : integer range 0 to 255 := 0; 
 
 
 
@@ -112,6 +115,7 @@ begin
 			fp_v_alpha_open <= (OTHERS => '0');
 			fp_v_beta_open <= (OTHERS => '0');
 			open_loop_done <= '0';
+			int_state_counter <= 0;
 
 			state <= IDLE;
 			--int_rtc_clk_setpoint <= sys_clk/60; -- Set RTC counter to default 60 Hz
@@ -130,7 +134,7 @@ begin
 				when CALC_FREQ_COUNTER =>
 					-- Calculate new frequency counter setpoint
 					-- Move to Idle state
-					int_rtc_clk_setpoint <= sys_clk/int_saved_freq/TABLE_SIZE_FULL;
+					int_rtc_clk_setpoint <= INT_CLK_TABLE/int_saved_freq;
 					state <= IDLE;
 					
 				when IDLE =>	
